@@ -1,0 +1,13 @@
+.venv
+.env
+
+*.pyc
+__pycache__
+*.egg-info
+
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+
+.idea/
