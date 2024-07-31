@@ -3,16 +3,16 @@ name = "NGOHub"
 version = "0.0.2"
 description = "Python client for ngohub.ro API"
 readme = "README.md"
-license = {file = "LICENSE"}
+license = { file = "LICENSE" }
 classifiers = [
-    "Development Status :: 1 - Planning",
-    "Intended Audience :: Developers",
-    "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",
-    "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3",
-    "Topic :: Software Development",
-    "Topic :: Software Development :: Libraries",
-    "Topic :: Software Development :: Libraries :: Python Modules",
+  "Development Status :: 1 - Planning",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Topic :: Software Development",
+  "Topic :: Software Development :: Libraries",
+  "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 requires-python = ">=3.11"
 dependencies = [
@@ -30,17 +30,20 @@ build-backend = "setuptools.build_meta"
 
 [tool.ruff]
 exclude = [
-    ".eggs",
-    ".git",
-    ".ruff_cache",
-    ".venv",
-    ".vscode",
-    "__pypackages__",
-    "dist",
-    "venv",
+  ".eggs",
+  ".git",
+  ".ruff_cache",
+  ".venv",
+  ".vscode",
+  "__pypackages__",
+  "dist",
+  "venv",
 ]
 line-length = 120
 target-version = "py311"
+
+# TEMP: Disable until we have some code
+ignore = ["F401"]
 
 [tool.black]
 line-length = 120

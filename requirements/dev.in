@@ -1,0 +1,6 @@
+-r docs.txt
+-r tests.txt
+-r format.txt
+
+pip-tools~=7.4
+tox~=4.16
