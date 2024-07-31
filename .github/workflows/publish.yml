@@ -59,11 +59,14 @@ jobs:
           GH_TOKEN: ${{ github.token }}
 
   publish-pypi:
+    needs: [provenance]
+    # Wait for approval before attempting to upload to PyPI. This allows reviewing the
+    # files in the draft release.
     name: Upload release to PyPI
-    runs-on: ubuntu-latest
     environment:
-      name: pypi
+      name: publish
       url: https://pypi.org/project/NGOHub/${{ github.ref_name }}
+    runs-on: ubuntu-latest
     permissions:
       id-token: write
     steps:
@@ -72,7 +75,6 @@ jobs:
         with:
           repository-url: https://test.pypi.org/legacy/
           packages-dir: artifact/
-# TEMP: Use test.pypi.org until we figure out this is stable
 #      - uses: pypa/gh-action-pypi-publish@ec4db0b4ddc65acdf4bff5fa45ac92d78b56bdf0 # v1.9.0
 #        with:
 #          packages-dir: artifact/
