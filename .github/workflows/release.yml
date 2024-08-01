@@ -70,14 +70,17 @@ jobs:
     steps:
       - uses: actions/download-artifact@65a9edc5881444af0b9093a5e628f2fe47ea3b2e # v4.1.7
 
-      - name: create release
+      - name: Create a GitHub release
         run: >
-          gh release create --draft
-          "${{ github.ref_name }}"
-          --repo "${{ github.repository }}"
-          --title "${{ github.ref_name }}"
-          --verify-tag
-          --generate-notes
-          dist/*
+          gh release create
+            --repo "${{ github.repository }}"
+            --title "${{ github.ref_name }}"
+            --notes-from-file CHANGELOG.md
+            --draft
+            --latest
+            --verify-tag
+            --generate-notes
+            "${{ github.ref_name }}"
+            dist/*
         env:
           GH_TOKEN: ${{ github.token }}
