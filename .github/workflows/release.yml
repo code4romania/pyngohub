@@ -81,7 +81,6 @@ jobs:
             dist/* \
             --repo "${{ github.repository }}" \
             --title "${{ github.ref_name }}" \
-            --notes-from-tag \
             --draft \
             --verify-tag \
             --generate-notes
