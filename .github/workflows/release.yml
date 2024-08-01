@@ -74,6 +74,7 @@ jobs:
         run: >
           gh release create --draft
           "${{ github.ref_name }}"
+          --repo "${{ github.repository }}"
           --title "${{ github.ref_name }}"
           --verify-tag
           --generate-notes
