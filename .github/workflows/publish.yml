@@ -65,7 +65,6 @@ jobs:
     runs-on: "ubuntu-latest"
     environment:
       name: "testpypi"
-      url: https://test.pypi.org/project/ngohub/${{ github.ref_name }}
 
     steps:
       - name: "Download dists"
