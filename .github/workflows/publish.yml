@@ -10,71 +10,99 @@ jobs:
   build:
     runs-on: ubuntu-latest
     outputs:
-      hash: ${{ steps.hash.outputs.hash }}
+      hashes: ${{ steps.hash.outputs.hashes }}
+
     steps:
-      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
-      - uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d # v5.1.0
+      - name: "Checkout repository"
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
         with:
-          python-version: '3.x'
-          cache: pip
-          cache-dependency-path: requirements*/*.txt
-      - run: pip install -r requirements/build.txt
+          fetch-depth: 0
+
+      - name: "Setup Python"
+        uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d # v5.1.0
+        with:
+          python-version: "3.x"
+
+      - name: "Install dependencies"
+        run: pip install -r requirements/build.txt
+
       # Use the commit date instead of the current date during the build.
-      - run: echo "SOURCE_DATE_EPOCH=$(git log -1 --pretty=%ct)" >> $GITHUB_ENV
-      - run: python -m build
+      - name: "Build dists"
+        run: |
+          SOURCE_DATE_EPOCH=$(git log -1 --pretty=%ct) \
+          python -m build
+
       # Generate hashes used for provenance.
-      - name: generate hash
+      - name: "Generate hashes"
         id: hash
-        run: cd dist && echo "hash=$(sha256sum * | base64 -w0)" >> $GITHUB_OUTPUT
-      - uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
+        run: |
+          cd dist && echo "hashes=$(sha256sum * | base64 -w0)" >> $GITHUB_OUTPUT
+
+      - name: "Upload dists"
+        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
         with:
-          path: ./dist
+          name: "dist"
+          path: "dist/"
+          if-no-files-found: error
+          retention-days: 5
 
   provenance:
-    needs: [build]
+    needs: [ build ]
     permissions:
       actions: read
-      id-token: write
       contents: write
-    # Can't pin with hash due to how this workflow works.
-    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@41733f74c025cc6d156547121989dd50fbc92364
+      id-token: write # Needed to access the workflow's OIDC identity.
+    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v2.0.0
     with:
-      base64-subjects: ${{ needs.build.outputs.hash }}
+      base64-subjects: "${{ needs.build.outputs.hashes }}"
+      upload-assets: true
 
-  create-release:
-    # Upload the sdist, wheels, and provenance to a GitHub release. They remain
-    # available as build artifacts for a while as well.
-    needs: [provenance]
-    runs-on: ubuntu-latest
+  publish-to-test-pypi:
+    name: "Publish to Test PyPI"
+    needs: [ "build", "provenance" ]
     permissions:
-      contents: write
-    steps:
-      - uses: actions/download-artifact@65a9edc5881444af0b9093a5e628f2fe47ea3b2e # v4.1.7
-      - name: create release
-        run: >
-          gh release create --draft --repo ${{ github.repository }}
-          ${{ github.ref_name }}
-          *.intoto.jsonl/* artifact/*
-        env:
-          GH_TOKEN: ${{ github.token }}
-
-  publish-pypi:
-    needs: [provenance]
-    # Wait for approval before attempting to upload to PyPI. This allows reviewing the
-    # files in the draft release.
-    name: Upload release to PyPI
+      id-token: write # Needed for trusted publishing to PyPI.
+    runs-on: "ubuntu-latest"
     environment:
-      name: publish
-      url: https://pypi.org/project/NGOHub/${{ github.ref_name }}
-    runs-on: ubuntu-latest
-    permissions:
-      id-token: write
+      name: "testpypi"
+      url: https://test.pypi.org/project/NGOHub/${{ github.ref_name }}
+
     steps:
-      - uses: actions/download-artifact@65a9edc5881444af0b9093a5e628f2fe47ea3b2e # v4.1.7
-      - uses: pypa/gh-action-pypi-publish@ec4db0b4ddc65acdf4bff5fa45ac92d78b56bdf0 # v1.9.0
+      - name: "Download dists"
+        uses: actions/download-artifact@65a9edc5881444af0b9093a5e628f2fe47ea3b2e # v4.1.7
+        with:
+          name: "dist"
+          path: "dist/"
+
+      - name: "Publish dists to Test PyPI"
+        uses: pypa/gh-action-pypi-publish@ec4db0b4ddc65acdf4bff5fa45ac92d78b56bdf0 # v1.9.0
         with:
           repository-url: https://test.pypi.org/legacy/
-          packages-dir: artifact/
-#      - uses: pypa/gh-action-pypi-publish@ec4db0b4ddc65acdf4bff5fa45ac92d78b56bdf0 # v1.9.0
+
+#  publish-to-pypi-and-github:
+#    name: "Publish to PyPI"
+#    if: startsWith(github.ref, 'refs/tags/')
+#    needs: [ "build", "provenance" ]
+#    permissions:
+#      contents: write # Needed for making GitHub releases
+#      id-token: write # Needed for trusted publishing to PyPI.
+#    runs-on: "ubuntu-latest"
+#    environment:
+#      name: "publish"
+#      url: https://pypi.org/project/NGOHub/${{ github.ref_name }}
+#
+#    steps:
+#      - name: "Download dists"
+#        uses: actions/download-artifact@65a9edc5881444af0b9093a5e628f2fe47ea3b2e # v4.1.7
 #        with:
-#          packages-dir: artifact/
+#          name: "dist"
+#          path: "dist/"
+#
+#      - name: "Upload dists to GitHub Release"
+#        env:
+#          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+#        run: |
+#          gh release upload ${{ github.ref_name }} dist/* --repo ${{ github.repository }}
+#
+#      - name: "Publish dists to PyPI"
+#        uses: pypa/gh-action-pypi-publish@ec4db0b4ddc65acdf4bff5fa45ac92d78b56bdf0 # v1.9.0
