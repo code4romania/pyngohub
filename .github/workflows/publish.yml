@@ -57,9 +57,26 @@ jobs:
       base64-subjects: "${{ needs.build.outputs.hashes }}"
       upload-assets: true
 
+  create-github-release:
+    # Upload the sdist, wheels, and provenance to a GitHub release. They remain
+    # available as build artifacts for a while as well.
+    needs: [ provenance ]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@65a9edc5881444af0b9093a5e628f2fe47ea3b2e # v4.1.7
+      - name: create release
+        run: >
+          gh release create --draft --repo ${{ github.repository }}
+          ${{ github.ref_name }}
+          *.intoto.jsonl/* artifact/*
+        env:
+          GH_TOKEN: ${{ github.token }}
+
   publish-to-test-pypi:
     name: "Publish to Test PyPI"
-    needs: [ "build", "provenance" ]
+    needs: [ "build", "provenance", "create-github-release" ]
     permissions:
       id-token: write # Needed for trusted publishing to PyPI.
     runs-on: "ubuntu-latest"
@@ -88,7 +105,6 @@ jobs:
 #    runs-on: "ubuntu-latest"
 #    environment:
 #      name: "publish"
-#      url: https://pypi.org/project/ngohub/${{ github.ref_name }}
 #
 #    steps:
 #      - name: "Download dists"
