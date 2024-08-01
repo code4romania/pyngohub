@@ -1,4 +1,4 @@
-name: Publish package to PyPI
+name: Build package and publish to GitHub and Test PyPI
 
 on:
   push:
@@ -66,22 +66,27 @@ jobs:
       contents: write
     steps:
       - uses: actions/download-artifact@65a9edc5881444af0b9093a5e628f2fe47ea3b2e # v4.1.7
+
       - name: create release
         run: >
-          gh release create --draft --repo ${{ github.repository }}
-          ${{ github.ref_name }}
+          gh release create --draft
+          "${{ github.ref_name }}"
+          --title "${{ github.ref_name }}"
+          --verify-tag
+          --generate-notes
           *.intoto.jsonl/* artifact/*
         env:
           GH_TOKEN: ${{ github.token }}
 
   publish-to-test-pypi:
     name: "Publish to Test PyPI"
-    needs: [ "build", "provenance", "create-github-release" ]
+    needs: [ "build", "provenance" ]
     permissions:
       id-token: write # Needed for trusted publishing to PyPI.
     runs-on: "ubuntu-latest"
     environment:
       name: "testpypi"
+      url: "https://test.pypi.org/p/ngohub/${{ github.ref_name }}/"
 
     steps:
       - name: "Download dists"
@@ -94,30 +99,3 @@ jobs:
         uses: pypa/gh-action-pypi-publish@ec4db0b4ddc65acdf4bff5fa45ac92d78b56bdf0 # v1.9.0
         with:
           repository-url: https://test.pypi.org/legacy/
-
-#  publish-to-pypi-and-github:
-#    name: "Publish to PyPI"
-#    if: startsWith(github.ref, 'refs/tags/')
-#    needs: [ "build", "provenance" ]
-#    permissions:
-#      contents: write # Needed for making GitHub releases
-#      id-token: write # Needed for trusted publishing to PyPI.
-#    runs-on: "ubuntu-latest"
-#    environment:
-#      name: "publish"
-#
-#    steps:
-#      - name: "Download dists"
-#        uses: actions/download-artifact@65a9edc5881444af0b9093a5e628f2fe47ea3b2e # v4.1.7
-#        with:
-#          name: "dist"
-#          path: "dist/"
-#
-#      - name: "Upload dists to GitHub Release"
-#        env:
-#          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-#        run: |
-#          gh release upload ${{ github.ref_name }} dist/* --repo ${{ github.repository }}
-#
-#      - name: "Publish dists to PyPI"
-#        uses: pypa/gh-action-pypi-publish@ec4db0b4ddc65acdf4bff5fa45ac92d78b56bdf0 # v1.9.0
