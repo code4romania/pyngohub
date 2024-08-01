@@ -79,7 +79,6 @@ jobs:
             --title "${{ github.ref_name }}"
             --notes-from-file CHANGELOG.md
             --draft
-            --latest
             --verify-tag
             --generate-notes
         env:
