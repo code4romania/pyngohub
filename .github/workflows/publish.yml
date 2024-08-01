@@ -1,10 +1,63 @@
-name: Publish package to PyPI
+name: Build package and publish to GitHub and Test PyPI
 
 on:
-  release:
-    types: [ published ]
+  push:
+    tags:
+      - 'v*'
 
 jobs:
+
+  build:
+    name: "Build package"
+    runs-on: ubuntu-latest
+    outputs:
+      hashes: ${{ steps.hash.outputs.hashes }}
+
+    steps:
+      - name: "Checkout repository"
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+        with:
+          fetch-depth: 0
+
+      - name: "Setup Python"
+        uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d # v5.1.0
+        with:
+          python-version: "3.x"
+
+      - name: "Install dependencies"
+        run: pip install -r requirements/build.txt
+
+      # Use the commit date instead of the current date during the build.
+      - name: "Build dists"
+        run: |
+          SOURCE_DATE_EPOCH=$(git log -1 --pretty=%ct) \
+          python -m build
+
+      # Generate hashes used for provenance.
+      - name: "Generate hashes"
+        id: hash
+        run: |
+          cd dist && echo "hashes=$(sha256sum * | base64 -w0)" >> $GITHUB_OUTPUT
+
+      - name: "Upload dists"
+        uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4.3.4
+        with:
+          name: "dist"
+          path: "dist/"
+          if-no-files-found: error
+          retention-days: 5
+
+  provenance:
+    name: "Generate provenance"
+    needs: [ build ]
+    permissions:
+      actions: read
+      contents: write
+      id-token: write # Needed to access the workflow's OIDC identity.
+    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v2.0.0
+    with:
+      base64-subjects: "${{ needs.build.outputs.hashes }}"
+      upload-assets: true
 
   publish-to-test-pypi:
     name: "Publish to Test PyPI"
