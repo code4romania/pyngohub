@@ -76,7 +76,7 @@ jobs:
             dist/* \
             --repo "${{ github.repository }}" \
             --title "${{ github.ref_name }}" \
-            --notes-from-file CHANGELOG.md \
+            --notes-file CHANGELOG.md \
             --draft \
             --verify-tag \
             --generate-notes
