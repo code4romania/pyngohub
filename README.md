@@ -17,6 +17,27 @@ Help us out by testing this project. If you see something that doesn't quite wor
 
 If you would like to suggest new functionality, open an Issue and mark it as a __[Feature request]__. Please be specific about why you think this functionality will be of use. If you can, please include some visual description of what you would like the UI to look like, if you are suggesting new UI elements.
 
+### Updating requirements
+
+Updating requirements is done using tox.
+For this, run the following command in the root directory:
+
+```shell
+tox -e update-requirements
+```
+
+If you want an efficient one-liner to update and install the requirements, use the following:
+
+```shell
+tox -e update-requirements && pushd requirements/ && pip install -r dev.txt && popd
+```
+
+### Publishing
+
+Once a new tag is created, the `publish` job is triggered.
+If the `project.version` from the `pyproject.toml` doesn't correspond with a tag or if it already exists in `pypi.org`,
+then the job is failed, and the tag needs to be deleted and the `pyproject.toml` needs to be updated.
+
 ## A Simple Example
 
 ```python
