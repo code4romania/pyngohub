@@ -1,10 +1,16 @@
-class OrganizationException(Exception):
-    """Some kind of problem with an organization"""
+class HubException(Exception):
+    """The base exception for all Hub issues"""
 
     pass
 
 
-class ClosedRegistrationException(OrganizationException):
+class OrganizationException(HubException):
+    """The base exception for all Hub Organization issues"""
+
+    pass
+
+
+class ClosedOrganizationRegistrationException(OrganizationException):
     """New organizations cannot be registered anymore"""
 
     pass
@@ -28,13 +34,13 @@ class MissingOrganizationException(OrganizationException):
     pass
 
 
-class NGOHubHTTPException(OrganizationException):
-    """NGO Hub API error"""
+class HubHTTPException(HubException):
+    """The base exception for all Hub HTTP/network issues"""
 
     pass
 
 
-class NGOHubDecodeException(NGOHubHTTPException):
+class HubDecodeException(HubHTTPException):
     """Failed to decode response"""
 
     pass
