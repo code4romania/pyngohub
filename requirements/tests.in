@@ -1,0 +1,7 @@
+pytest
+pytest-env
+pytest-cov
+
+python-dotenv
+
+schema

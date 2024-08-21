@@ -19,12 +19,20 @@ click==8.1.7
     #   pip-tools
 colorama==0.4.6
     # via tox
+coverage==7.6.1
+    # via
+    #   -r tests.txt
+    #   pytest-cov
 distlib==0.3.8
     # via virtualenv
 filelock==3.15.4
     # via
     #   tox
     #   virtualenv
+iniconfig==2.0.0
+    # via
+    #   -r tests.txt
+    #   pytest
 mypy-extensions==1.0.0
     # via
     #   -r format.txt
@@ -32,9 +40,11 @@ mypy-extensions==1.0.0
 packaging==24.1
     # via
     #   -r format.txt
+    #   -r tests.txt
     #   black
     #   build
     #   pyproject-api
+    #   pytest
     #   tox
 pathspec==0.12.1
     # via
@@ -49,20 +59,36 @@ platformdirs==4.2.2
     #   tox
     #   virtualenv
 pluggy==1.5.0
-    # via tox
+    # via
+    #   -r tests.txt
+    #   pytest
+    #   tox
 pyproject-api==1.7.1
     # via tox
 pyproject-hooks==1.1.0
     # via
     #   build
     #   pip-tools
-ruff==0.5.5
+pytest==8.3.2
+    # via
+    #   -r tests.txt
+    #   pytest-cov
+    #   pytest-env
+pytest-cov==5.0.0
+    # via -r tests.txt
+pytest-env==1.1.3
+    # via -r tests.txt
+python-dotenv==1.0.1
+    # via -r tests.txt
+ruff==0.5.7
     # via -r format.txt
-tox==4.16.0
+schema==0.7.7
+    # via -r tests.txt
+tox==4.18.0
     # via -r dev.in
 virtualenv==20.26.3
     # via tox
-wheel==0.43.0
+wheel==0.44.0
     # via pip-tools
 
 # The following packages are considered to be unsafe in a requirements file:

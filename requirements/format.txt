@@ -16,5 +16,5 @@ pathspec==0.12.1
     # via black
 platformdirs==4.2.2
     # via black
-ruff==0.5.5
+ruff==0.5.7
     # via -r format.in
