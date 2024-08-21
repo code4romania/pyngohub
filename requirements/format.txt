@@ -4,7 +4,7 @@
 #
 #    pip-compile --strip-extras format.in
 #
-black==24.4.2
+black==24.8.0
     # via -r format.in
 click==8.1.7
     # via black
@@ -16,5 +16,5 @@ pathspec==0.12.1
     # via black
 platformdirs==4.2.2
     # via black
-ruff==0.5.7
+ruff==0.6.1
     # via -r format.in
