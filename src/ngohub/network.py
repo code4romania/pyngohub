@@ -1,4 +1,3 @@
-
 import http
 import json
 import logging
@@ -44,7 +43,7 @@ class HTTPClient:
     """
     HTTP client for interacting with an HTTP API
     """
-    
+
     def __init__(self, api_base_url: str, *, auth_type="Bearer", auth_header="Authorization"):
         self.api_base_url = api_base_url or ""
         self.auth_type = auth_type
@@ -94,19 +93,14 @@ class HTTPClient:
 
         return HTTPClientResponse(response)
 
-
     def api_get(self, path: str, token: str = None) -> HTTPClientResponse:
         return self._api_request("GET", path, token, params=None)
-
 
     def api_post(self, path: str, params: Dict, token: str = None) -> HTTPClientResponse:
         return self._api_request("POST", path, token, params)
 
-
     def api_patch(self, path: str, params: Dict, token: str = None) -> HTTPClientResponse:
         return self._api_request("PATCH", path, token, params)
 
-
     def api_delete(self, path: str, token: str = None) -> HTTPClientResponse:
         return self._api_request("DELETE", path, token, params=None)
-

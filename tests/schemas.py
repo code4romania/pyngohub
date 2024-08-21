@@ -1,5 +1,12 @@
 from schema import Regex, Schema
 
+VERSION_REVISION_SCHEMA = Schema(
+    {
+        "version": Regex(r"\d+\.\d+\.\d+"),
+        "revision": Regex(r"[0-9a-f]{40}"),
+    }
+)
+
 NOMENCLATURE_CITIES_SCHEMA = Schema(
     [
         {

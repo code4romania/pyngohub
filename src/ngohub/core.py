@@ -6,8 +6,9 @@ from ngohub.network import HTTPClient, HTTPClientResponse
 
 class BaseHub(ABC):
     """
-    TODO: Define all the required methods for the hub interface
+    Abstract class used to define all the required methods for a hub interface
     """
+
     @abstractmethod
     def __init__(self, api_base_url: str) -> None:
         pass
@@ -18,17 +19,23 @@ class NGOHub(BaseHub):
         self.api_base_url: str = api_base_url or ""
         self.client: HTTPClient = HTTPClient(self.api_base_url)
 
-    def get_health(self) -> str:
-        # TODO: Maybe refactor to `is_healthy() -> Bool`?
+    def is_healthy(self) -> bool:
         response: HTTPClientResponse = self.client.api_get("/health/")
 
-        return response.to_str()
+        response_is_ok: bool = response.to_str() == "OK"
 
-    def get_version(self) -> Dict:
-        # TODO: Maybe refactor to `get_version() -> str`?
+        return response_is_ok
+
+    def get_version(self) -> Dict[str, str]:
         response: HTTPClientResponse = self.client.api_get("/version/")
 
-        return response.to_dict()
+        response_dict: Dict = response.to_dict()
+        version_revision: Dict[str, str] = {
+            "version": response_dict["version"],
+            "revision": response_dict["revision"],
+        }
+
+        return version_revision
 
     def get_file_url(self, path: str) -> str:
         response: HTTPClientResponse = self.client.api_get(f"/file?path={path}")
@@ -40,7 +47,9 @@ class NGOHub(BaseHub):
 
         return response.to_dict()
 
-    def get_cities_nomenclatures(self, search: str = None, county_id: int = None, city_id: int = None) -> List[Dict[str, Any]]:
+    def get_cities_nomenclatures(
+        self, search: str = None, county_id: int = None, city_id: int = None
+    ) -> List[Dict[str, Any]]:
         mandatory_params: List[Any] = [search, county_id]
         if all(param is None for param in mandatory_params):
             raise ValueError("Please provide at least one of the following: county_id, search")

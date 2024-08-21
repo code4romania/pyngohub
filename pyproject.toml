@@ -27,6 +27,9 @@ Download = "https://github.com/code4romania/pyngohub/tags"
 requires = ["setuptools>=72.1"]
 build-backend = "setuptools.build_meta"
 
+[lint]
+ignore = []
+
 [tool.ruff]
 exclude = [
   ".eggs",
@@ -40,9 +43,6 @@ exclude = [
 ]
 line-length = 120
 target-version = "py311"
-
-# TEMP: Disable until we have some code
-ignore = ["F401"]
 
 [tool.black]
 line-length = 120

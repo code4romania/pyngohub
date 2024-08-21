@@ -1,1 +1,1 @@
-from .core import NGOHub
+from .core import NGOHub as NGOHub
