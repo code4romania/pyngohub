@@ -61,7 +61,7 @@ def _authenticate_with_ngohub(
     )
     u.authenticate(password=api_key)
 
-    return u.id_token
+    return u.access_token
 
 
 class FakeHTTPSConnection:

@@ -10,7 +10,6 @@ from tests.test_end_to_end.schemas import (
 )
 
 
-@pytest.mark.investigation_needed
 def test_organization_profile():
     hub = NGOHub(pytest.ngohub_api_url)
     response = hub.get_organization_profile(ngo_token=pytest.ngo_admin_token)
