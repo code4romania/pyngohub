@@ -34,13 +34,39 @@ class MissingOrganizationException(OrganizationException):
     pass
 
 
+class UserException(HubException):
+    """The base exception for all Hub User issues"""
+
+    pass
+
+
+class MissingUserException(UserException):
+    """The requested user does not exist"""
+
+    pass
+
+
 class HubHTTPException(HubException):
     """The base exception for all Hub HTTP/network issues"""
 
-    pass
+    def __init__(self, message: str, status_code: int, path: str, reason: str):
+        self.message = message
+        self.status_code = status_code
+        self.path = path
+        self.reason = reason
+
+        super().__init__(message)
+
+
+class HubBadRequestException(HubHTTPException):
+    """The request was malformed"""
+
+    def __init__(self, message: str, path: str):
+        super().__init__(message, 400, path, "Bad request")
 
 
 class HubDecodeException(HubHTTPException):
     """Failed to decode response"""
 
-    pass
+    def __init__(self, message: str):
+        super().__init__(message, 500, "", "Internal server error")
