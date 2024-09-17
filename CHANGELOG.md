@@ -1,5 +1,10 @@
 # Change Log
 
+## [0.0.6](https://github.com/code4romania/pyngohub/releases/tag/0.0.5)(2024-09-17)
+
+* Fix the check for a user's access to an application
+
+
 ## [0.0.5](https://github.com/code4romania/pyngohub/releases/tag/0.0.5)(2024-09-17)
 
 * Add user/organization endpoints for getting information
