@@ -113,7 +113,7 @@ class NGOHub(BaseHub):
         return response.to_dict()
 
     def get_user_organization_applications(self, ngo_token: str) -> List[Dict[str, Any]]:
-        response: HTTPClientResponse = self.client.api_get("/organization/applications/", token=ngo_token)
+        response: HTTPClientResponse = self.client.api_get("/organizations/application/", token=ngo_token)
 
         return list(response.to_dict())
 

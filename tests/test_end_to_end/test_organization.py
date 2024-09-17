@@ -127,3 +127,24 @@ def test_check_organization_user_with_app_has_application():
     assert response["user"] is not None
     assert response["application"] is not None
     assert response["access"] is True
+
+
+def test_check_user_organization_doesnt_have_missing_application():
+    hub = NGOHub(pytest.ngohub_api_url)
+    response = hub.check_user_organization_has_application(
+        ngo_token=pytest.ngo_admin_token,
+        login_link="https://random-a3qlpo8tqsyxa0utl.com",
+    )
+
+    assert response == {}
+
+
+def test_check_user_organization_has_application():
+    hub = NGOHub(pytest.ngohub_api_url)
+    response = hub.check_user_organization_has_application(
+        ngo_token=pytest.ngo_admin_token,
+        login_link=pytest.app_login_link,
+    )
+
+    assert response != {}
+    assert response["loginLink"].startswith(pytest.app_login_link)
