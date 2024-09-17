@@ -19,6 +19,7 @@ on:
       - 'requirements/**.in'
 
 jobs:
+
   tox_checks:
     name: Run tox checks
     runs-on: ubuntu-latest
