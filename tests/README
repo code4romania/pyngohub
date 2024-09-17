@@ -1,1 +1,24 @@
-TODO
+# Running tests
+
+## Environment Variables
+
+All the necessary environment variables are set in the `.env.test` file.
+You can copy the `.env.example.test` file and fill in the necessary values.
+
+## Running tests
+
+The tests are run using the `pytest` library through the `tox` library.
+To run the tests, you can use the following command:
+
+```bash
+tox -e test
+```
+
+This will run the tests from the library.
+
+If you want to run all the `tox` environments, you can use the following command:
+
+```bash
+# You can optionally add the run-parallel flag to run the tests in parallel
+tox [run-parallel]
+```
