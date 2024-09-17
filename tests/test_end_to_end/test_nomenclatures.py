@@ -1,7 +1,7 @@
 import pytest
 
 from ngohub.core import NGOHub
-from tests.schemas import (
+from tests.test_end_to_end.schemas import (
     NOMENCLATURE_BENEFIARIES_SCHEMA,
     NOMENCLATURE_CITIES_SCHEMA,
     NOMENCLATURE_COALITIONS_SCHEMA,

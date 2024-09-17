@@ -6,7 +6,7 @@ import urllib.parse
 from http.client import HTTPResponse, HTTPSConnection
 from typing import Dict, Optional
 
-from ngohub.exceptions import HubDecodeException, HubHTTPException
+from ngohub.exceptions import HubBadRequestException, HubDecodeException, HubHTTPException
 
 
 logger = logging.getLogger(__name__)
@@ -80,16 +80,27 @@ class HTTPClient:
         try:
             conn.request(method=request_method, url=path, body=encoded_params, headers=headers)
         except socket.gaierror as e:
-            raise HubHTTPException(f"Failed to make request to '{path}': {e}")
+            raise HubBadRequestException(
+                message=f"Failed to make request to '{path}': {e}",
+                path=path,
+            )
 
         try:
             response: HTTPResponse = conn.getresponse()
         except ConnectionError as e:
-            raise HubHTTPException(f"Failed to get response from '{path}': {e}")
+            raise HubBadRequestException(
+                message=f"Failed to get response from '{path}': {e}",
+                path=path,
+            )
 
         if response.status != http.HTTPStatus.OK:
             logger.info(path)
-            raise HubHTTPException(f"{response.status} while retrieving '{path}'. Reason: {response.reason}")
+            raise HubHTTPException(
+                message=f"{response.status} while retrieving '{path}'. Reason: {response.reason}",
+                status_code=response.status,
+                path=path,
+                reason=response.reason,
+            )
 
         return HTTPClientResponse(response)
 

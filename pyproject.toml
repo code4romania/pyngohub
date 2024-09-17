@@ -65,7 +65,6 @@ addopts = "-ra -q"
 testpaths = [
   "tests",
 ]
-env_files = [
-  ".env",
-  ".env.test",
+markers = [
+  "investigation_needed: mark test as needing investigation (deselect with '-m \"not investigation_needed\"')",
 ]
