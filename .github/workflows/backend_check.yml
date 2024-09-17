@@ -22,6 +22,7 @@ jobs:
   tox_checks:
     name: Run tox checks
     runs-on: ubuntu-latest
+    environment: Test_Environment
     steps:
     - name: Check out Git repository
       uses: actions/checkout@v4
@@ -41,6 +42,25 @@ jobs:
           ${{ runner.os }}-pip-
 
     - name: Install tox and run
+      env:
+        SKIP_TEST_ENV_FILE: 'true'
+        NGO_HUB_API_URL: ${{ secrets.NGO_HUB_API_URL }}
+        AWS_COGNITO_REGION: ${{ secrets.AWS_COGNITO_REGION }}
+        AWS_COGNITO_USER_POOL_ID: ${{ secrets.AWS_COGNITO_USER_POOL_ID }}
+        AWS_COGNITO_CLIENT_ID: ${{ secrets.AWS_COGNITO_CLIENT_ID }}
+        AWS_COGNITO_CLIENT_SECRET: ${{ secrets.AWS_COGNITO_CLIENT_SECRET }}
+        NGOHUB_API_ACCOUNT: ${{ secrets.NGOHUB_API_ACCOUNT }}
+        NGOHUB_API_KEY: ${{ secrets.NGOHUB_API_KEY }}
+        NGOHUB_NGO_ACCOUNT: ${{ secrets.NGOHUB_NGO_ACCOUNT }}
+        NGOHUB_NGO_KEY: ${{ secrets.NGOHUB_NGO_KEY }}
+        APP_LOGIN_LINK: ${{ secrets.APP_LOGIN_LINK }}
+        NGO_ID: ${{ secrets.NGO_ID }}
+        NGO_ADMIN_ID: ${{ secrets.NGO_ADMIN_ID }}
+        NGO_USER_ID: ${{ secrets.NGO_USER_ID }}
+        NGO_USER_ID_NO_APP: ${{ secrets.NGO_USER_ID_NO_APP }}
+        NGO_OTHER_ID: ${{ secrets.NGO_OTHER_ID }}
+        NGO_OTHER_ADMIN_ID: ${{ secrets.NGO_OTHER_ADMIN_ID }}
+        NGO_OTHER_USER_ID: ${{ secrets.NGO_OTHER_USER_ID }}
       run: |
           pip install --upgrade tox
           tox run-parallel
