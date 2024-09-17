@@ -1,7 +1,7 @@
 import pytest
 
 from ngohub.core import NGOHub
-from tests.schemas import VERSION_REVISION_SCHEMA
+from tests.test_end_to_end.schemas import VERSION_REVISION_SCHEMA
 
 
 def test_health_returns_ok():
