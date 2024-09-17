@@ -1,8 +1,9 @@
 [project]
 name = "NGOHub"
-version = "0.0.4"
+version = "0.0.5"
 description = "Python client for ngohub.ro API"
 readme = "README.md"
+
 classifiers = [
   "Development Status :: 1 - Planning",
   "Intended Audience :: Developers",

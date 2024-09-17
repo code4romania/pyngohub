@@ -1,8 +1,26 @@
 # Change Log
 
+## [0.0.5](https://github.com/code4romania/pyngohub/releases/tag/0.0.5)(2024-09-17)
+
+* Add user/organization endpoints for getting information
+  * add new organization and user endpoints
+    * get a user's profile
+    * get an NGO user's organization's profile
+    * get the applications of an organization's user
+    * get the list of apps
+    * get organization information
+    * get user(s) information
+  * checks for users making use of these endpoints
+    * check if a user has an application (self and other users)
+    * check if an organization has an application
+* Improve the management of tests with tox
+* Improve the documentation
+
+
 ## [0.0.4](https://github.com/code4romania/pyngohub/releases/tag/0.0.4)(2024-08-21)
 
 * Add code to work with the public endpoints (i.e., `health`, `version`, `file`, `nomenclatures/*`)
+
 
 ## [0.0.3](https://github.com/code4romania/pyngohub/releases/tag/0.0.3)(2024-08-01)
 
@@ -11,10 +29,12 @@
 * Update the README
 * Add a `tox` configuration
 
+
 ## [0.0.2](https://github.com/code4romania/pyngohub/releases/tag/0.0.2)(2024-07-31)
 
 * Update the README
 * Update the project classifiers
+
 
 ## [0.0.1](https://github.com/code4romania/pyngohub/releases/tag/0.0.1)(2024-07-30)
 
