@@ -1,7 +1,10 @@
 pytest
 pytest-env
 pytest-cov
+pytest-xdist
 
 python-dotenv
 
 schema
+
+pycognito
