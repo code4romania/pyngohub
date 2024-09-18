@@ -4,6 +4,7 @@ from typing import Any, Dict, List, Union
 
 from ngohub.exceptions import HubHTTPException, MissingUserException
 from ngohub.network import HTTPClient, HTTPClientResponse
+from ngohub.normalization.organization import normalize_organization_data
 
 
 class BaseHub(ABC):
@@ -16,11 +17,26 @@ class BaseHub(ABC):
         self.api_base_url: str = api_base_url or ""
 
 
-class NGOHub(BaseHub):
+class NGOHubRaw(BaseHub):
     def __init__(self, api_base_url: str) -> None:
         super().__init__(api_base_url)
 
         self.client: HTTPClient = HTTPClient(self.api_base_url)
+
+    def get_raw_organization_profile(self, ngo_token: str) -> Dict[str, Any]:
+        response: HTTPClientResponse = self.client.api_get("/organization-profile/", token=ngo_token)
+
+        return response.to_dict()
+
+    def get_raw_organization(self, admin_token: str, organization_id: int) -> Dict[str, Any]:
+        response: HTTPClientResponse = self.client.api_get(f"/organization/{organization_id}/", token=admin_token)
+
+        return response.to_dict()
+
+
+class NGOHub(NGOHubRaw):
+    def __init__(self, api_base_url: str) -> None:
+        super().__init__(api_base_url)
 
     def is_healthy(self) -> bool:
         response: HTTPClientResponse = self.client.api_get("/health/")
@@ -108,9 +124,9 @@ class NGOHub(BaseHub):
 
     # Organization related methods
     def get_organization_profile(self, ngo_token: str) -> Dict[str, Any]:
-        response: HTTPClientResponse = self.client.api_get("/organization-profile/", token=ngo_token)
+        response: Dict[str, Any] = self.get_raw_organization_profile(ngo_token)
 
-        return response.to_dict()
+        return normalize_organization_data(response)
 
     def get_user_organization_applications(self, ngo_token: str) -> List[Dict[str, Any]]:
         response: HTTPClientResponse = self.client.api_get("/organizations/application/", token=ngo_token)
@@ -133,9 +149,9 @@ class NGOHub(BaseHub):
         return list(response.to_dict())
 
     def get_organization(self, admin_token: str, organization_id: int) -> Dict[str, Any]:
-        response: HTTPClientResponse = self.client.api_get(f"/organization/{organization_id}/", token=admin_token)
+        response: Dict[str, Any] = self.get_raw_organization(admin_token=admin_token, organization_id=organization_id)
 
-        return response.to_dict()
+        return normalize_organization_data(response)
 
     def get_organization_applications(self, admin_token: str, organization_id: int) -> List[Dict[str, Any]]:
         response: HTTPClientResponse = self.client.api_get(

@@ -12,7 +12,7 @@ from tests.test_end_to_end.schemas import (
 
 def test_organization_profile():
     hub = NGOHub(pytest.ngohub_api_url)
-    response = hub.get_organization_profile(ngo_token=pytest.ngo_admin_token)
+    response = hub.get_raw_organization_profile(ngo_token=pytest.ngo_admin_token)
 
     assert ORGANIZATION_PROFILE_SCHEMA.validate(response)
 
@@ -26,7 +26,7 @@ def test_organization_profile_returns_401():
 
 def test_organization():
     hub = NGOHub(pytest.ngohub_api_url)
-    response = hub.get_organization(admin_token=pytest.admin_token, organization_id=10)
+    response = hub.get_raw_organization(admin_token=pytest.admin_token, organization_id=10)
 
     assert ORGANIZATION_SCHEMA.validate(response)
 
