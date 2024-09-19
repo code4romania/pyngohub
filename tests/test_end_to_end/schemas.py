@@ -336,3 +336,19 @@ PROFILE_SCHEMA = Schema(
         ),
     }
 )
+
+
+USER_SCHEMA = Schema(
+    {
+        "cognitoId": str,
+        "createdOn": Regex(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z"),
+        "updatedOn": Regex(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z"),
+        "email": str,
+        "id": int,
+        "name": str,
+        "organizationId": int,
+        "phone": str,
+        "role": str,
+        "status": str,
+    }
+)

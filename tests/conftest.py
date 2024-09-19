@@ -13,14 +13,14 @@ def pytest_configure():
 
     pytest.app_login_link = os.environ["APP_LOGIN_LINK"]
 
-    pytest.ngo_id = os.environ["NGO_ID"]
-    pytest.ngo_admin_id = os.environ["NGO_ADMIN_ID"]
-    pytest.ngo_user_id = os.environ["NGO_USER_ID"]
-    pytest.ngo_user_id_no_app = os.environ["NGO_USER_ID_NO_APP"]
+    pytest.ngo_id = int(os.environ["NGO_ID"])
+    pytest.ngo_admin_id = int(os.environ["NGO_ADMIN_ID"])
+    pytest.ngo_user_id = int(os.environ["NGO_USER_ID"])
+    pytest.ngo_user_id_no_app = int(os.environ["NGO_USER_ID_NO_APP"])
 
-    pytest.ngo_other_id = os.environ["NGO_OTHER_ID"]
-    pytest.ngo_other_admin_id = os.environ["NGO_OTHER_ADMIN_ID"]
-    pytest.ngo_other_user_id = os.environ["NGO_OTHER_USER_ID"]
+    pytest.ngo_other_id = int(os.environ["NGO_OTHER_ID"])
+    pytest.ngo_other_admin_id = int(os.environ["NGO_OTHER_ADMIN_ID"])
+    pytest.ngo_other_user_id = int(os.environ["NGO_OTHER_USER_ID"])
 
     pytest.admin_username = os.environ["NGOHUB_API_ACCOUNT"]
     pytest.ngo_admin_username = os.environ["NGOHUB_NGO_ACCOUNT"]

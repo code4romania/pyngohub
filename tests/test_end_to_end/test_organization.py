@@ -2,6 +2,7 @@ import pytest
 
 from ngohub import NGOHub
 from ngohub.exceptions import HubHTTPException
+from ngohub.models.organization import OrganizationApplication
 from tests.test_end_to_end.schemas import (
     APPLICATION_LIST_SCHEMA,
     ORGANIZATION_APPLICATIONS_SCHEMA,
@@ -21,7 +22,7 @@ def test_organization_profile_returns_401():
     hub = NGOHub(pytest.ngohub_api_url)
 
     with pytest.raises(HubHTTPException):
-        hub.get_organization_profile(ngo_token="invalid_token")
+        hub.get_raw_organization_profile(ngo_token="invalid_token")
 
 
 def test_organization():
@@ -33,14 +34,14 @@ def test_organization():
 
 def test_application_list():
     hub = NGOHub(pytest.ngohub_api_url)
-    response = hub.get_application_list(admin_token=pytest.admin_token)
+    response = hub.get_raw_application_list(admin_token=pytest.admin_token)
 
     assert APPLICATION_LIST_SCHEMA.validate(response)
 
 
 def test_organization_applications():
     hub = NGOHub(pytest.ngohub_api_url)
-    response = hub.get_organization_applications(admin_token=pytest.admin_token, organization_id=pytest.ngo_id)
+    response = hub.get_raw_organization_applications(admin_token=pytest.admin_token, organization_id=pytest.ngo_id)
 
     assert ORGANIZATION_APPLICATIONS_SCHEMA.validate(response)
 
@@ -54,9 +55,9 @@ def test_check_missing_organization_returns_empty():
         login_link=pytest.app_login_link,
     )
 
-    assert response["user"] is None
-    assert response["application"] is None
-    assert response["access"] is None
+    assert response.user is None
+    assert response.application is None
+    assert response.has_access is None
 
 
 def test_check_missing_user_returns_empty():
@@ -68,9 +69,9 @@ def test_check_missing_user_returns_empty():
         login_link=pytest.app_login_link,
     )
 
-    assert response["user"] is None
-    assert response["application"] is not None
-    assert response["access"] is None
+    assert response.user is None
+    assert response.application is not None
+    assert response.has_access is None
 
 
 def test_check_organization_wrong_admin_does_not_have_application():
@@ -82,9 +83,9 @@ def test_check_organization_wrong_admin_does_not_have_application():
         login_link=pytest.app_login_link,
     )
 
-    assert response["user"] is None
-    assert response["application"] is not None
-    assert response["access"] is None
+    assert response.user is None
+    assert response.application is not None
+    assert response.has_access is None
 
 
 def test_check_organization_admin_has_application():
@@ -96,9 +97,9 @@ def test_check_organization_admin_has_application():
         login_link=pytest.app_login_link,
     )
 
-    assert response["user"] is not None
-    assert response["application"] is not None
-    assert response["access"] is True
+    assert response.user is not None
+    assert response.application is not None
+    assert response.has_access is True
 
 
 def test_check_organization_user_without_app_doesnt_have_application():
@@ -110,9 +111,9 @@ def test_check_organization_user_without_app_doesnt_have_application():
         login_link=pytest.app_login_link,
     )
 
-    assert response["user"] is not None
-    assert response["application"] is not None
-    assert response["access"] is False
+    assert response.user is not None
+    assert response.application is not None
+    assert response.has_access is False
 
 
 def test_check_organization_user_with_app_has_application():
@@ -124,9 +125,9 @@ def test_check_organization_user_with_app_has_application():
         login_link=pytest.app_login_link,
     )
 
-    assert response["user"] is not None
-    assert response["application"] is not None
-    assert response["access"] is True
+    assert response.user is not None
+    assert response.application is not None
+    assert response.has_access is True
 
 
 def test_check_user_organization_doesnt_have_missing_application():
@@ -136,7 +137,7 @@ def test_check_user_organization_doesnt_have_missing_application():
         login_link="https://random-a3qlpo8tqsyxa0utl.com",
     )
 
-    assert response == {}
+    assert response is None
 
 
 def test_check_user_organization_has_application():
@@ -146,5 +147,5 @@ def test_check_user_organization_has_application():
         login_link=pytest.app_login_link,
     )
 
-    assert response != {}
-    assert response["loginLink"].startswith(pytest.app_login_link)
+    assert isinstance(response, OrganizationApplication)
+    assert response.login_link.startswith(pytest.app_login_link)
