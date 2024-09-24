@@ -6,7 +6,7 @@ from ngohub.exceptions import HubHTTPException, MissingUserException
 from ngohub.models.checks import CheckOrganizationUserApplication
 from ngohub.models.organization import Application, Organization, OrganizationApplication
 from ngohub.models.public import Version
-from ngohub.models.user import User
+from ngohub.models.user import User, UserProfile
 from ngohub.network import HTTPClient, HTTPClientResponse
 from ngohub.normalization.organization import (
     normalize_application_list,
@@ -14,7 +14,7 @@ from ngohub.normalization.organization import (
     normalize_organization_data,
 )
 from ngohub.normalization.public import normalize_version
-from ngohub.normalization.user import normalize_user
+from ngohub.normalization.user import normalize_user, normalize_user_profile
 
 
 class BaseHub(ABC):
@@ -200,6 +200,11 @@ class NGOHub(NGOHubRaw):
 
     def get_file_url(self, path: str) -> str:
         return self.get_raw_file_url(path)
+
+    def get_profile(self, user_token: str) -> UserProfile:
+        response: Dict[str, Any] = self.get_raw_profile(user_token=user_token)
+
+        return normalize_user_profile(response)
 
     # Organization related methods
     def get_organization_profile(self, ngo_token: str) -> Organization:

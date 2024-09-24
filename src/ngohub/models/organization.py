@@ -8,6 +8,14 @@ from ngohub.models.nomenclatures import Domain
 
 
 @dataclass
+class OrganizationBase(BaseDataclass):
+    id: int
+    created_on: datetime
+    updated_on: datetime
+    status: str
+
+
+@dataclass
 class OrganizationContact(BaseDataclass):
     email: str
     phone: str
@@ -166,11 +174,7 @@ class OrganizationReport(BaseDataclass):
 
 
 @dataclass
-class Organization(BaseDataclass):
-    id: int
-    created_on: datetime
-    updated_on: datetime
-    status: str
+class Organization(OrganizationBase):
     general_data: OrganizationGeneral
     activity_data: OrganizationActivity
     legal_data: OrganizationLegal
