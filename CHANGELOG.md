@@ -1,6 +1,11 @@
 # Change Log
 
-## [0.0.6](https://github.com/code4romania/pyngohub/releases/tag/0.0.5)(2024-09-17)
+## [0.0.7](https://github.com/code4romania/pyngohub/releases/tag/0.0.7)(2024-09-24)
+
+* Return dataclass-based objects from the API
+
+
+## [0.0.6](https://github.com/code4romania/pyngohub/releases/tag/0.0.6)(2024-09-17)
 
 * Fix the check for a user's access to an application
 
