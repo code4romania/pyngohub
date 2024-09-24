@@ -4,9 +4,9 @@
 #
 #    pip-compile --strip-extras tests.in
 #
-boto3==1.35.19
+boto3==1.35.25
     # via pycognito
-botocore==1.35.19
+botocore==1.35.25
     # via
     #   boto3
     #   s3transfer
@@ -50,7 +50,7 @@ pytest==8.3.3
     #   pytest-xdist
 pytest-cov==5.0.0
     # via -r tests.in
-pytest-env==1.1.4
+pytest-env==1.1.5
     # via -r tests.in
 pytest-xdist==3.6.1
     # via -r tests.in

@@ -1,2 +1,4 @@
-black~=24.8.0
-ruff~=0.6.1
+# make sure to also update the .pre-commit-config.yaml file
+
+black==24.8.0
+ruff==0.6.7
