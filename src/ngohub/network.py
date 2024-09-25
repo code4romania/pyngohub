@@ -2,6 +2,7 @@ import http
 import json
 import logging
 import socket
+import ssl
 import urllib.parse
 from http.client import HTTPResponse, HTTPSConnection
 from typing import Dict, Optional
@@ -80,6 +81,11 @@ class HTTPClient:
         try:
             conn.request(method=request_method, url=path, body=encoded_params, headers=headers)
         except socket.gaierror as e:
+            raise HubBadRequestException(
+                message=f"Failed to make request to '{path}': {e}",
+                path=path,
+            )
+        except ssl.SSLEOFError as e:
             raise HubBadRequestException(
                 message=f"Failed to make request to '{path}': {e}",
                 path=path,
