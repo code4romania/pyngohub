@@ -1,12 +1,13 @@
 from dataclasses import dataclass
-from typing import Dict, Union
+from typing import Union
 
 from ngohub.models.organization import OrganizationApplication
+from ngohub.models.user import User
 
 
 @dataclass
 class CheckOrganizationUserApplication:
-    user: Union[Dict, None]
+    user: Union[User, None]
     application: Union[OrganizationApplication, None]
     has_access: Union[bool, None]
 

@@ -3,7 +3,8 @@ from datetime import datetime
 from typing import List
 
 from ngohub.models.core import BaseDataclass
-from ngohub.models.locations import City, County
+from ngohub.models.entities import Coalition, Federation
+from ngohub.models.locations import City, CityBase, County, Region
 from ngohub.models.nomenclatures import Domain
 
 
@@ -20,6 +21,11 @@ class OrganizationContact(BaseDataclass):
     email: str
     phone: str
     full_name: str
+    name: str = ""
+
+    def __post_init__(self):
+        if not self.name:
+            self.name = self.full_name
 
 
 @dataclass
@@ -73,6 +79,14 @@ class OrganizationInvestors(OrganizationReportFile):
 
 
 @dataclass
+class AssociationRegistryIssuer(BaseDataclass):
+    id: int
+    name: str
+    created_on: datetime
+    updated_on: datetime
+
+
+@dataclass
 class OrganizationGeneral(BaseDataclass):
     id: str
     created_on: datetime
@@ -106,11 +120,11 @@ class OrganizationGeneral(BaseDataclass):
     donation_keyword: str
     contact: OrganizationContact
     organization_address: str
-    city: City
+    city: CityBase
     county: County
     organization_city: str
     organization_county: str
-    association_registry_issuer: str
+    association_registry_issuer: AssociationRegistryIssuer
 
 
 @dataclass
@@ -127,12 +141,12 @@ class OrganizationActivity(BaseDataclass):
     offers_grants: bool
     is_public_interest_organization: bool
     has_branches: bool
-    federations: List[str]
-    coalitions: List[str]
+    federations: List[Federation]
+    coalitions: List[Coalition]
     domains: List[Domain]
-    cities: List[str]
-    branches: List[str]
-    regions: List[str]
+    cities: List[City]
+    branches: List[City]
+    regions: List[Region]
 
 
 @dataclass

@@ -2,7 +2,7 @@ import pytest
 
 from ngohub import NGOHub
 from ngohub.exceptions import HubHTTPException
-from ngohub.models.organization import OrganizationApplication
+from ngohub.models.organization import Application, Organization, OrganizationApplication
 from tests.test_end_to_end.schemas import (
     APPLICATION_LIST_SCHEMA,
     ORGANIZATION_APPLICATIONS_SCHEMA,
@@ -25,18 +25,40 @@ def test_organization_profile_returns_401():
         hub.get_raw_organization_profile(ngo_token="invalid_token")
 
 
-def test_organization():
+@pytest.mark.parametrize("organization_id", [1, 10, 23, 296])
+def test_raw_organization(organization_id):
     hub = NGOHub(pytest.ngohub_api_url)
-    response = hub.get_raw_organization(admin_token=pytest.admin_token, organization_id=10)
+
+    response = hub.get_raw_organization(admin_token=pytest.admin_token, organization_id=organization_id)
 
     assert ORGANIZATION_SCHEMA.validate(response)
 
 
-def test_application_list():
+@pytest.mark.parametrize("organization_id", [1, 10, 23, 296])
+def test_organization(organization_id):
+    hub = NGOHub(pytest.ngohub_api_url)
+
+    response = hub.get_organization(admin_token=pytest.admin_token, organization_id=organization_id)
+
+    assert response is not None
+    assert isinstance(response, Organization)
+    assert response.id == organization_id
+
+
+def test_raw_application_list():
     hub = NGOHub(pytest.ngohub_api_url)
     response = hub.get_raw_application_list(admin_token=pytest.admin_token)
 
     assert APPLICATION_LIST_SCHEMA.validate(response)
+
+
+def test_application_list():
+    hub = NGOHub(pytest.ngohub_api_url)
+    response = hub.get_application_list(admin_token=pytest.admin_token)
+
+    assert response is not None
+    assert len(response) > 0
+    assert isinstance(response[0], Application)
 
 
 def test_organization_applications():

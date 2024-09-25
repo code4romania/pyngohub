@@ -1,6 +1,6 @@
 from typing import Any, Dict, List
 
-from ngohub.models.locations import City, County
+from ngohub.models.locations import CityBase, County
 from ngohub.models.nomenclatures import Domain
 from ngohub.models.organization import (
     Application,
@@ -22,13 +22,12 @@ from ngohub.normalization.processors import (
     camel_to_snake_case_dictionary,
     camel_to_snake_case_dictionary_list,
     convert_date,
-    extract_key,
 )
 
 
 def _normalize_organization_general(org_general_data: Dict) -> OrganizationGeneral:
     org_general_data["contact"] = OrganizationContact(**org_general_data["contact"])
-    org_general_data["city"] = City(**org_general_data["city"])
+    org_general_data["city"] = CityBase(**org_general_data["city"])
     org_general_data["county"] = County(**org_general_data["county"])
 
     org_general = OrganizationGeneral(**org_general_data)
@@ -49,7 +48,7 @@ def _normalize_organization_activity(org_activity_data: Dict) -> OrganizationAct
 
 def _normalize_organization_legal(org_legal_data: Dict) -> OrganizationLegal:
     org_directors: List[OrganizationDirector] = []
-    for director in extract_key(org_legal_data, "directors"):
+    for director in org_legal_data["directors"]:
         org_directors.append(OrganizationDirector(**director))
 
     org_legal_data["directors"] = org_directors
@@ -71,13 +70,13 @@ def _normalize_organization_report(org_report_data: Dict) -> OrganizationReport:
     org_partners: List[OrganizationPartners] = []
     org_investors: List[OrganizationInvestors] = []
 
-    for report in extract_key(org_report_data, "reports"):
+    for report in org_report_data.get("reports"):
         org_reports.append(OrganizationReports(**report))
 
-    for partner in extract_key(org_report_data, "partners"):
+    for partner in org_report_data.get("partners"):
         org_partners.append(OrganizationPartners(**partner))
 
-    for investor in extract_key(org_report_data, "investors"):
+    for investor in org_report_data.get("investors"):
         org_investors.append(OrganizationInvestors(**investor))
 
     org_report_data["reports"] = org_reports

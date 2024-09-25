@@ -1,4 +1,4 @@
-from schema import Or, Regex, Schema
+from schema import Optional, Or, Regex, Schema
 
 VERSION_REVISION_SCHEMA = Schema(
     {
@@ -98,32 +98,40 @@ ORGANIZATION_SCHEMA = ORGANIZATION_PROFILE_SCHEMA = Schema(
             "phone": str,
             "yearCreated": int,
             "cui": str,
-            "associationRegistryNumber": None,
-            "associationRegistryPart": None,
-            "associationRegistrySection": None,
-            "associationRegistryIssuerId": None,
-            "nationalRegistryNumber": None,
-            "rafNumber": str,
+            "associationRegistryNumber": Or(None, str),
+            "associationRegistryPart": Or(None, str),
+            "associationRegistrySection": Or(None, str),
+            "associationRegistryIssuerId": Or(None, int),
+            "nationalRegistryNumber": Or(None, str),
+            "rafNumber": Or(None, str),
             "shortDescription": str,
             "description": str,
             "address": str,
-            "logo": str,
-            "website": str,
-            "facebook": str,
-            "instagram": str,
-            "twitter": str,
-            "linkedin": str,
-            "tiktok": str,
-            "donationWebsite": str,
-            "redirectLink": str,
-            "donationSMS": str,
-            "donationKeyword": str,
-            "contact": {
-                "email": str,
-                "phone": str,
-                "fullName": str,
-            },
-            "organizationAddress": None,
+            "logo": Or(None, str),
+            "website": Or(None, str),
+            "facebook": Or(None, str),
+            "instagram": Or(None, str),
+            "twitter": Or(None, str),
+            "linkedin": Or(None, str),
+            "tiktok": Or(None, str),
+            "donationWebsite": Or(None, str),
+            "redirectLink": Or(None, str),
+            "donationSMS": Or(None, str),
+            "donationKeyword": Or(None, str),
+            "contact": Or(
+                {
+                    "email": str,
+                    "phone": str,
+                    "fullName": str,
+                },
+                {
+                    "name": str,
+                    "email": str,
+                    "phone": str,
+                    "fullName": str,
+                },
+            ),
+            "organizationAddress": Or(None, str),
             "city": {
                 "id": int,
                 "name": str,
@@ -137,9 +145,14 @@ ORGANIZATION_SCHEMA = ORGANIZATION_PROFILE_SCHEMA = Schema(
                 "regionId": int,
                 "createdOn": Regex(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z"),
             },
-            "organizationCity": None,
-            "organizationCounty": None,
-            "associationRegistryIssuer": None,
+            "organizationCity": Or(None, dict),
+            "organizationCounty": Or(None, dict),
+            "associationRegistryIssuer": {
+                "id": int,
+                "name": str,
+                "createdOn": Regex(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z"),
+                "updatedOn": Regex(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z"),
+            },
         },
         "organizationActivity": {
             "id": int,
@@ -149,13 +162,29 @@ ORGANIZATION_SCHEMA = ORGANIZATION_PROFILE_SCHEMA = Schema(
             "isPartOfFederation": bool,
             "isPartOfCoalition": bool,
             "isPartOfInternationalOrganization": bool,
-            "internationalOrganizationName": None,
+            "internationalOrganizationName": Or(None, str),
             "isSocialServiceViable": bool,
             "offersGrants": bool,
             "isPublicIntrestOrganization": bool,
             "hasBranches": bool,
-            "federations": [],
-            "coalitions": [],
+            "federations": [
+                {
+                    "id": int,
+                    "name": str,
+                    "abbreviation": str,
+                    "createdOn": Regex(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z"),
+                    "updatedOn": Regex(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z"),
+                }
+            ],
+            "coalitions": [
+                {
+                    "id": int,
+                    "name": str,
+                    "abbreviation": str,
+                    "createdOn": Regex(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z"),
+                    "updatedOn": Regex(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z"),
+                }
+            ],
             "domains": [
                 {
                     "id": int,
@@ -164,15 +193,50 @@ ORGANIZATION_SCHEMA = ORGANIZATION_PROFILE_SCHEMA = Schema(
                     "name": str,
                 }
             ],
-            "cities": [],
-            "branches": [],
-            "regions": [],
+            "cities": [
+                {
+                    "id": int,
+                    "name": str,
+                    "countyId": int,
+                    "county": {
+                        "id": int,
+                        "name": str,
+                        "abbreviation": str,
+                        "regionId": int,
+                        "createdOn": Regex(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z"),
+                    },
+                    "createdOn": Regex(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z"),
+                }
+            ],
+            "branches": [
+                {
+                    "id": int,
+                    "name": str,
+                    "countyId": int,
+                    "county": {
+                        "id": int,
+                        "name": str,
+                        "abbreviation": str,
+                        "regionId": int,
+                        "createdOn": Regex(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z"),
+                    },
+                    "createdOn": Regex(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z"),
+                }
+            ],
+            "regions": [
+                {
+                    "id": int,
+                    "name": str,
+                    "createdOn": Regex(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z"),
+                    "updatedOn": Regex(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z"),
+                }
+            ],
         },
         "organizationLegal": {
             "id": int,
             "createdOn": Regex(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z"),
             "updatedOn": Regex(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z"),
-            "others": None,
+            "others": Or(None, str),
             "organizationStatute": str,
             "nonPoliticalAffiliationFile": str,
             "balanceSheetFile": str,
@@ -183,7 +247,7 @@ ORGANIZATION_SCHEMA = ORGANIZATION_PROFILE_SCHEMA = Schema(
                 "fullName": str,
                 "email": str,
                 "phone": str,
-                "role": str,
+                "role": Or(None, str),  # noqa
             },
             "directors": [
                 {
@@ -203,13 +267,37 @@ ORGANIZATION_SCHEMA = ORGANIZATION_PROFILE_SCHEMA = Schema(
                 "createdOn": Regex(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z"),
                 "updatedOn": Regex(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z"),
                 "type": str,
-                "numberOfEmployees": Or(None, int),  # noqa2
+                "numberOfEmployees": Or(None, int),  # noqa
                 "year": int,
                 "total": Or(None, int),  # noqa
                 "status": str,
                 "reportStatus": str,
                 "synched_anaf": bool,
-                "data": Or(None, str),  # noqa
+                "data": Or(
+                    None,
+                    {
+                        Optional("donationsIncome"): str,
+                        Optional("economicActivityIncome"): str,
+                        Optional("financialIncome"): str,
+                        Optional("membershipFeeIncome"): str,
+                        Optional("otherIncome"): str,
+                        Optional("sponsorshipIncome"): str,
+                        Optional("twoPercentIncome"): str,
+                    },
+                    {
+                        Optional("administrativeExpense"): str,
+                        Optional("advertising"): str,
+                        Optional("cas"): str,
+                        Optional("catering"): str,
+                        Optional("economicActivityDirectExpense"): str,
+                        Optional("netSalaries"): str,
+                        Optional("otherExpense"): str,
+                        Optional("otherTaxes"): str,
+                        Optional("production"): str,
+                        Optional("softwareServices"): str,
+                        Optional("transportAndAccommodation"): str,
+                    },
+                ),
             }
         ],
         "organizationReport": {
@@ -221,7 +309,7 @@ ORGANIZATION_SCHEMA = ORGANIZATION_PROFILE_SCHEMA = Schema(
                     "id": int,
                     "createdOn": Regex(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z"),
                     "updatedOn": Regex(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z"),
-                    "report": None,
+                    "report": Or(None, str),  # noqa
                     "numberOfVolunteers": int,
                     "numberOfContractors": int,
                     "year": int,
@@ -236,7 +324,7 @@ ORGANIZATION_SCHEMA = ORGANIZATION_PROFILE_SCHEMA = Schema(
                     "year": int,
                     "numberOfPartners": int,
                     "status": str,
-                    "path": None,
+                    "path": Or(None, str),  # noqa
                 }
             ],
             "investors": [
@@ -247,7 +335,7 @@ ORGANIZATION_SCHEMA = ORGANIZATION_PROFILE_SCHEMA = Schema(
                     "year": int,
                     "numberOfInvestors": int,
                     "status": str,
-                    "path": None,
+                    "path": Or(None, str),  # noqa
                 }
             ],
         },
