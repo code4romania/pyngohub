@@ -5,12 +5,36 @@ import socket
 import ssl
 import urllib.parse
 from http.client import HTTPResponse, HTTPSConnection
-from typing import Dict, Optional
+from typing import Dict, Optional, Tuple, Type
 
 from ngohub.exceptions import HubBadRequestException, HubDecodeException, HubHTTPException
 
-
 logger = logging.getLogger(__name__)
+
+
+def retry(attempts: int, exceptions: Tuple[Type[Exception]]):
+    """
+    Retry Decorator
+    Retries the wrapped function/method `times` times if the exceptions listed in ``exceptions`` are thrown
+
+    :param attempts: The number of times to repeat the wrapped function/method
+    :param exceptions: Lists of exceptions that trigger a retry attempt
+    """
+
+    def decorator(func):
+        def new_function(*args, **kwargs):
+            attempt = 0
+            while attempt < attempts:
+                try:
+                    return func(*args, **kwargs)
+                except exceptions:
+                    print("Exception thrown when attempting to run %s, attempt " "%d of %d" % (func, attempt, attempts))
+                    attempt += 1
+            return func(*args, **kwargs)
+
+        return new_function
+
+    return decorator
 
 
 class HTTPClientResponse:
@@ -50,6 +74,7 @@ class HTTPClient:
         self.auth_type = auth_type
         self.auth_header = auth_header
 
+    @retry(attempts=3, exceptions=(HubBadRequestException,))
     def _api_request(
         self,
         request_method: str,
