@@ -1,5 +1,12 @@
 # Change Log
 
+## [0.0.8](https://github.com/code4romania/pyngohub/releases/tag/0.0.8)(2024-09-26)
+
+* Normalize the API responses for user profile and organization data
+* Implement better error handling for the API
+* Add a retry mechanism for the API
+
+
 ## [0.0.7](https://github.com/code4romania/pyngohub/releases/tag/0.0.7)(2024-09-24)
 
 * Return dataclass-based objects from the API
