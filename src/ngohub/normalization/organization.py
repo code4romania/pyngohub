@@ -1,6 +1,6 @@
 from typing import Any, Dict, List
 
-from ngohub.models.locations import CityBase, County
+from ngohub.models.locations import CityBase, County, Region
 from ngohub.models.nomenclatures import Domain
 from ngohub.models.organization import (
     Application,
@@ -37,10 +37,15 @@ def _normalize_organization_general(org_general_data: Dict) -> OrganizationGener
 
 def _normalize_organization_activity(org_activity_data: Dict) -> OrganizationActivity:
     org_domains: List[Domain] = []
+    org_regions: List[Region] = []
     for domain in org_activity_data["domains"]:
         org_domains.append(Domain(**domain))
+    for region in org_activity_data["regions"]:
+        org_regions.append(Region(**region))
 
     org_activity_data["domains"] = org_domains
+    org_activity_data["regions"] = org_regions
+
     normal_data = OrganizationActivity(**org_activity_data)
 
     return normal_data

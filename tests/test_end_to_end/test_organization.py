@@ -10,6 +10,8 @@ from tests.test_end_to_end.schemas import (
     ORGANIZATION_SCHEMA,
 )
 
+TEST_ORGANIZATION_IDS = [1, 10, 23, 296]
+
 
 def test_organization_profile():
     hub = NGOHub(pytest.ngohub_api_url)
@@ -25,7 +27,7 @@ def test_organization_profile_returns_401():
         hub.get_raw_organization_profile(ngo_token="invalid_token")
 
 
-@pytest.mark.parametrize("organization_id", [1, 10, 23, 296])
+@pytest.mark.parametrize("organization_id", TEST_ORGANIZATION_IDS)
 def test_raw_organization(organization_id):
     hub = NGOHub(pytest.ngohub_api_url)
 
@@ -34,7 +36,7 @@ def test_raw_organization(organization_id):
     assert ORGANIZATION_SCHEMA.validate(response)
 
 
-@pytest.mark.parametrize("organization_id", [1, 10, 23, 296])
+@pytest.mark.parametrize("organization_id", TEST_ORGANIZATION_IDS)
 def test_organization(organization_id):
     hub = NGOHub(pytest.ngohub_api_url)
 
