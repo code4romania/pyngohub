@@ -1,5 +1,11 @@
 # Change Log
 
+## [0.0.9](https://github.com/code4romania/pyngohub/releases/tag/0.0.9)(2024-10-03)
+
+* Fix the regions of an `organization.activity_data`
+* Add `BaseDataClass` to all the dataclasses
+
+
 ## [0.0.8](https://github.com/code4romania/pyngohub/releases/tag/0.0.8)(2024-09-26)
 
 * Normalize the API responses for user profile and organization data
