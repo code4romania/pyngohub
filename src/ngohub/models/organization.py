@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
-from typing import List
+from typing import List, Optional
 
 from ngohub.models.core import BaseDataclass
 from ngohub.models.entities import Coalition, Federation
@@ -122,8 +122,8 @@ class OrganizationGeneral(BaseDataclass):
     organization_address: str
     city: CityBase
     county: County
-    organization_city: str
-    organization_county: str
+    organization_city: Optional[CityBase]
+    organization_county: Optional[County]
     association_registry_issuer: AssociationRegistryIssuer
 
 

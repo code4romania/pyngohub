@@ -1,6 +1,6 @@
 from typing import Any, Dict, List
 
-from ngohub.models.locations import CityBase, County, Region
+from ngohub.models.locations import City, CityBase, County, Region
 from ngohub.models.nomenclatures import Domain
 from ngohub.models.organization import (
     Application,
@@ -25,10 +25,24 @@ from ngohub.normalization.processors import (
 )
 
 
+def _normalize_city(city_data: Dict) -> City:
+    city_data["county"] = County(**city_data["county"])
+
+    normal_data = City(**city_data)
+
+    return normal_data
+
+
 def _normalize_organization_general(org_general_data: Dict) -> OrganizationGeneral:
     org_general_data["contact"] = OrganizationContact(**org_general_data["contact"])
+
     org_general_data["city"] = CityBase(**org_general_data["city"])
     org_general_data["county"] = County(**org_general_data["county"])
+
+    if org_general_data["organization_city"]:
+        org_general_data["organization_city"] = CityBase(**org_general_data["organization_city"])
+    if org_general_data["organization_county"]:
+        org_general_data["organization_county"] = County(**org_general_data["organization_county"])
 
     org_general = OrganizationGeneral(**org_general_data)
 
@@ -38,13 +52,18 @@ def _normalize_organization_general(org_general_data: Dict) -> OrganizationGener
 def _normalize_organization_activity(org_activity_data: Dict) -> OrganizationActivity:
     org_domains: List[Domain] = []
     org_regions: List[Region] = []
+    org_cities: List[City] = []
+
     for domain in org_activity_data["domains"]:
         org_domains.append(Domain(**domain))
     for region in org_activity_data["regions"]:
         org_regions.append(Region(**region))
+    for city in org_activity_data["cities"]:
+        org_cities.append(_normalize_city(city))
 
     org_activity_data["domains"] = org_domains
     org_activity_data["regions"] = org_regions
+    org_activity_data["cities"] = org_cities
 
     normal_data = OrganizationActivity(**org_activity_data)
 
