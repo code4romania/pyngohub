@@ -42,7 +42,7 @@ And you're ready to go.
 
 To run the tests, we use tox, to check for different environments and run multiple checks and configurations.
 
-In order to run the tests, run the following command:
+To run the tests, run the following command:
 
 ```bash
 tox
@@ -60,6 +60,7 @@ tox -e update-requirements
 
 1. Update the version in the `pyproject.toml` file
 2. Create a new tag with the version and push it
+3. Update the `CHANGELOG.md` file with the new changes
 
 The GitHub Actions will take care of the rest.
 
