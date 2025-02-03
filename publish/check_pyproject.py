@@ -15,7 +15,7 @@ def read_pyproject(git_tag: str):
         git_tag = git_tag[1:]
 
     project_pypi_host: str = "pypi.org"
-    project_pypi_url: str = "project/NGOHub"
+    project_pypi_url: str = "simple/NGOHub"
 
     pyproject_path = os.path.abspath(os.path.join(os.pardir, "pyproject.toml"))
 
@@ -34,7 +34,9 @@ def read_pyproject(git_tag: str):
     response: HTTPResponse = conn.getresponse()
 
     if response.status != http.HTTPStatus.NOT_FOUND:
-        logger.info("A tag with this version already exists on pypi")
+        logger.info(
+            f"A tag with version {git_tag} already exists on pypi [https://{project_pypi_host}{current_version_url}]"
+        )
         return 1
 
     return 0
