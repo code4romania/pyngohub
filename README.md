@@ -22,6 +22,48 @@ else:
     print("The API is not healthy")
 ```
 
+## Development
+
+### Local development
+
+1. Clone the repository
+2. Create a virtual environment using python 3.12 or higher and activate it
+    ```bash
+    python3 -m venv venv && source venv/bin/activate
+    ```
+3. Install the dependencies
+    ```bash
+    pip install -r requirements/dev.txt
+    ```
+
+And you're ready to go.
+
+### Running the tests
+
+To run the tests, we use tox, to check for different environments and run multiple checks and configurations.
+
+In order to run the tests, run the following command:
+
+```bash
+tox
+```
+
+### Updating the requirements
+
+To update the requirements, you can run the following command:
+
+```bash
+tox -e update-requirements
+```
+
+### Creating a new release
+
+1. Update the version in the `pyproject.toml` file
+2. Create a new tag with the version and push it
+
+The GitHub Actions will take care of the rest.
+
+
 ## Feedback
 
 * Request a new feature on GitHub.
