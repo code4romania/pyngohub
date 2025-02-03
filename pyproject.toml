@@ -1,6 +1,6 @@
 [project]
 name = "NGOHub"
-version = "0.0.9"
+version = "0.0.10"
 description = "Python client for ngohub.ro API"
 readme = "README.md"
 

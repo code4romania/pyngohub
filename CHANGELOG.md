@@ -1,5 +1,11 @@
 # Change Log
 
+## [0.0.10](https://github.com/code4romania/pyngohub/releases/tag/0.0.10)(2025-02-03)
+
+* Fix the cities in the `organization.activity_data`
+* Fix the organization_city/_county from the `organization.general_data`
+
+
 ## [0.0.9](https://github.com/code4romania/pyngohub/releases/tag/0.0.9)(2024-10-03)
 
 * Fix the regions of an `organization.activity_data`
