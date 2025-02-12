@@ -1,7 +1,7 @@
 [project]
 name = "NGOHub"
-version = "0.0.10"
-description = "Python client for ngohub.ro API"
+version = "0.1.0"
+description = "Python client for the ngohub.ro API"
 readme = "README.md"
 
 classifiers = [

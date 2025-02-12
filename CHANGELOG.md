@@ -1,5 +1,11 @@
 # Change Log
 
+## [0.1.0](https://github.com/code4romania/pyngohub/releases/tag/0.1.0)(2025-02-12)
+
+* Bump the minor version to `0.1.0` since the package has passed the production test
+* Bring back compatibility with Python 3.11
+
+
 ## [0.0.10](https://github.com/code4romania/pyngohub/releases/tag/0.0.10)(2025-02-03)
 
 * Fix the cities in the `organization.activity_data`
