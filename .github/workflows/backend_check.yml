@@ -7,18 +7,22 @@ on:
     branches:
       - 'main'
     paths:
+      - 'tox.ini'
+      - 'pyproject.toml'
       - 'dist/**.py'
       - 'src/**.py'
       - 'tests/**.py'
-      - 'requirements/**.in'
+      - 'requirements/**'
   pull_request:
     branches:
       - 'main'
     paths:
+      - 'tox.ini'
+      - 'pyproject.toml'
       - 'dist/**.py'
       - 'src/**.py'
       - 'tests/**.py'
-      - 'requirements/**.in'
+      - 'requirements/**'
 
 jobs:
 
