@@ -1,7 +1,7 @@
 import pytest
 
 from ngohub import NGOHub
-from ngohub.exceptions import HubHTTPException
+from ngohub.exceptions import HubHTTPError
 from ngohub.models.organization import Application, Organization, OrganizationApplication
 from tests.test_end_to_end.schemas import (
     APPLICATION_LIST_SCHEMA,
@@ -23,7 +23,7 @@ def test_organization_profile():
 def test_organization_profile_returns_401():
     hub = NGOHub(pytest.ngohub_api_url)
 
-    with pytest.raises(HubHTTPException):
+    with pytest.raises(HubHTTPError):
         hub.get_raw_organization_profile(ngo_token="invalid_token")
 
 
