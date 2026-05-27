@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import Any, Dict, List, Optional, Union
 from urllib.parse import urlencode
 
-from ngohub.exceptions import HubHTTPException, MissingUserException
+from ngohub.exceptions import HubHTTPError, MissingUserError
 from ngohub.models.checks import CheckOrganizationUserApplication
 from ngohub.models.organization import Application, Organization, OrganizationApplication
 from ngohub.models.public import Version
@@ -138,9 +138,9 @@ class NGOHubRaw(BaseHub):
     def get_user_raw(self, admin_token: str, user_id: int) -> Dict[str, Any]:
         try:
             response: HTTPClientResponse = self.client.api_get(f"/user/{user_id}/", token=admin_token)
-        except HubHTTPException as e:
+        except HubHTTPError as e:
             if e.status_code == 404:
-                raise MissingUserException(f"User with ID {user_id} not found")
+                raise MissingUserError(f"User with ID {user_id} not found")
 
             raise e
 
@@ -321,7 +321,7 @@ class NGOHub(NGOHubRaw):
 
         try:
             user: User = self.get_user(admin_token, user_id)
-        except MissingUserException:
+        except MissingUserError:
             return response
 
         if not user or user.organization_id != int(organization_id):

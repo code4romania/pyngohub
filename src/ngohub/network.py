@@ -7,7 +7,7 @@ import urllib.parse
 from http.client import HTTPResponse, HTTPSConnection
 from typing import Dict, Optional, Tuple, Type
 
-from ngohub.exceptions import HubBadRequestException, HubDecodeException, HubHTTPException
+from ngohub.exceptions import HubBadRequestError, HubDecodeError, HubHTTPError
 
 logger = logging.getLogger(__name__)
 
@@ -49,7 +49,7 @@ class HTTPClientResponse:
         try:
             string_response: str = self.raw_response.read().decode("utf-8")
         except UnicodeDecodeError:
-            raise HubDecodeException(f"Failed to decode response: {self.raw_response.read()}")
+            raise HubDecodeError(f"Failed to decode response: {self.raw_response.read()}")
 
         return string_response
 
@@ -59,7 +59,7 @@ class HTTPClientResponse:
         try:
             dict_response = json.loads(string_response)
         except json.JSONDecodeError:
-            raise HubDecodeException(f"Failed to decode JSON response: {self.raw_response.read()}")
+            raise HubDecodeError(f"Failed to decode JSON response: {self.raw_response.read()}")
 
         return dict_response
 
@@ -74,7 +74,7 @@ class HTTPClient:
         self.auth_type = auth_type
         self.auth_header = auth_header
 
-    @retry(attempts=3, exceptions=(HubBadRequestException,))
+    @retry(attempts=3, exceptions=(HubBadRequestError,))
     def _api_request(
         self,
         request_method: str,
@@ -83,7 +83,7 @@ class HTTPClient:
         params: Optional[Dict],
     ) -> HTTPClientResponse:
         """
-        Perform a request to the NGO Hub API and return a JSON response, or raise HubHTTPException
+        Perform a request to the NGO Hub API and return a JSON response, or raise HubHTTPError
         """
         if not self.api_base_url:
             raise ValueError("The API base URL cannot be empty")
@@ -106,12 +106,12 @@ class HTTPClient:
         try:
             conn.request(method=request_method, url=path, body=encoded_params, headers=headers)
         except socket.gaierror as e:
-            raise HubBadRequestException(
+            raise HubBadRequestError(
                 message=f"Failed to make request to '{path}': {e}",
                 path=path,
             )
         except ssl.SSLEOFError as e:
-            raise HubBadRequestException(
+            raise HubBadRequestError(
                 message=f"Failed to make request to '{path}': {e}",
                 path=path,
             )
@@ -119,14 +119,14 @@ class HTTPClient:
         try:
             response: HTTPResponse = conn.getresponse()
         except ConnectionError as e:
-            raise HubBadRequestException(
+            raise HubBadRequestError(
                 message=f"Failed to get response from '{path}': {e}",
                 path=path,
             )
 
         if response.status != http.HTTPStatus.OK:
             logger.info(path)
-            raise HubHTTPException(
+            raise HubHTTPError(
                 message=f"{response.status} while retrieving '{path}'. Reason: {response.reason}",
                 status_code=response.status,
                 path=path,
