@@ -1,11 +1,11 @@
-from typing import Any, Dict
+from typing import Any
 
 from ngohub.models.organization import OrganizationBase
 from ngohub.models.user import User, UserProfile
 from ngohub.normalization.processors import camel_to_snake_case_dictionary
 
 
-def normalize_user(user_data: Dict[str, Any]) -> User:
+def normalize_user(user_data: dict[str, Any]) -> User:
     normal_data = User(
         id=user_data["id"],
         created_on=user_data["createdOn"],
@@ -22,8 +22,8 @@ def normalize_user(user_data: Dict[str, Any]) -> User:
     return normal_data
 
 
-def normalize_user_profile(user_data: Dict[str, Any]) -> UserProfile:
-    snake_case: Dict[str, any] = camel_to_snake_case_dictionary(user_data)
+def normalize_user_profile(user_data: dict[str, Any]) -> UserProfile:
+    snake_case: dict[str, Any] = camel_to_snake_case_dictionary(user_data)
 
     if snake_case["organization"]:
         snake_case["organization"] = OrganizationBase(**snake_case["organization"])

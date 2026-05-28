@@ -1,9 +1,9 @@
 import re
 from datetime import datetime
 from re import Pattern
-from typing import Any, Dict, List, Optional
+from typing import Any
 
-camel_case_to_snake_case_pattern: Optional[Pattern[str]] = None
+camel_case_to_snake_case_pattern: Pattern[str] | None = None
 
 
 def _compile_camel_to_snake_case_pattern() -> Pattern[str]:
@@ -31,11 +31,11 @@ def camel_to_snake_case(input_string: str) -> str:
 
 
 def camel_to_snake_case_dictionary(
-    input_dict: Dict[str, Any],
-    overrides: Dict[str, Any] = None,
-    cast_values: Dict[str, Any] = None,
-) -> Dict[str, Any]:
-    output_dict: Dict[str, Any] = {}
+    input_dict: dict[str, Any],
+    overrides: dict[str, Any] | None = None,
+    cast_values: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    output_dict: dict[str, Any] = {}
 
     for old_key, value in input_dict.items():
         if overrides and old_key in overrides:
@@ -44,7 +44,7 @@ def camel_to_snake_case_dictionary(
             new_key = camel_to_snake_case(old_key)
 
         if new_key in output_dict:
-            raise ValueError(f"Cannot normalize {old_key} to {new_key} because { new_key} already exists")
+            raise ValueError(f"Cannot normalize {old_key} to {new_key} because {new_key} already exists")
 
         if cast_values and new_key in cast_values:
             value = cast_values[new_key](value)
@@ -59,14 +59,14 @@ def camel_to_snake_case_dictionary(
 
 
 def camel_to_snake_case_dictionary_list(
-    input_list: List[Dict[str, Any]],
-    overrides: Dict[str, Any] = None,
-    cast_values: Dict[str, Any] = None,
-) -> List[Dict[str, Any]]:
+    input_list: list[dict[str, Any]],
+    overrides: dict[str, Any] | None = None,
+    cast_values: dict[str, Any] | None = None,
+) -> list[dict[str, Any]]:
     return [camel_to_snake_case_dictionary(item, overrides, cast_values) for item in input_list]
 
 
-def convert_date(date: str) -> Optional[datetime]:
+def convert_date(date: str) -> datetime | None:
     if not date:
         return None
 

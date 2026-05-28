@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 from datetime import datetime
-from typing import List, Optional
 
 from ngohub.models.core import BaseDataclass
 from ngohub.models.entities import Coalition, Federation
@@ -122,8 +121,8 @@ class OrganizationGeneral(BaseDataclass):
     organization_address: str
     city: CityBase
     county: County
-    organization_city: Optional[CityBase]
-    organization_county: Optional[County]
+    organization_city: CityBase | None
+    organization_county: County | None
     association_registry_issuer: AssociationRegistryIssuer
 
 
@@ -141,12 +140,12 @@ class OrganizationActivity(BaseDataclass):
     offers_grants: bool
     is_public_interest_organization: bool
     has_branches: bool
-    federations: List[Federation]
-    coalitions: List[Coalition]
-    domains: List[Domain]
-    cities: List[City]
-    branches: List[City]
-    regions: List[Region]
+    federations: list[Federation]
+    coalitions: list[Coalition]
+    domains: list[Domain]
+    cities: list[City]
+    branches: list[City]
+    regions: list[Region]
 
 
 @dataclass
@@ -159,7 +158,7 @@ class OrganizationLegal(BaseDataclass):
     non_political_affiliation_file: str
     balance_sheet_file: str
     legal_reprezentative: OrganizationLegalReprezentative
-    directors: List[OrganizationDirector]
+    directors: list[OrganizationDirector]
 
 
 @dataclass
@@ -182,9 +181,9 @@ class OrganizationReport(BaseDataclass):
     id: int
     created_on: datetime
     updated_on: datetime
-    reports: List[OrganizationReports]
-    partners: List[OrganizationPartners]
-    investors: List[OrganizationInvestors]
+    reports: list[OrganizationReports]
+    partners: list[OrganizationPartners]
+    investors: list[OrganizationInvestors]
 
 
 @dataclass
@@ -192,7 +191,7 @@ class Organization(OrganizationBase):
     general_data: OrganizationGeneral
     activity_data: OrganizationActivity
     legal_data: OrganizationLegal
-    financial_data: List[OrganizationFinancial]
+    financial_data: list[OrganizationFinancial]
     report_data: OrganizationReport
 
 
