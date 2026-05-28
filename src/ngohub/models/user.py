@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Union
 
 from ngohub.models.core import BaseDataclass
 from ngohub.models.organization import OrganizationBase
@@ -26,4 +25,4 @@ class User(BaseUser):
 
 @dataclass
 class UserProfile(BaseUser):
-    organization: Union[OrganizationBase, None]
+    organization: OrganizationBase | None

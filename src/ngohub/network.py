@@ -5,14 +5,13 @@ import socket
 import ssl
 import urllib.parse
 from http.client import HTTPResponse, HTTPSConnection
-from typing import Dict, Optional, Tuple, Type
 
 from ngohub.exceptions import HubBadRequestError, HubDecodeError, HubHTTPError
 
 logger = logging.getLogger(__name__)
 
 
-def retry(attempts: int, exceptions: Tuple[Type[Exception]]):
+def retry(attempts: int, exceptions: tuple[type[Exception]]):
     """
     Retry Decorator
     Retries the wrapped function/method `times` times if the exceptions listed in ``exceptions`` are thrown
@@ -53,7 +52,7 @@ class HTTPClientResponse:
 
         return string_response
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         string_response: str = self.to_str()
 
         try:
@@ -79,8 +78,8 @@ class HTTPClient:
         self,
         request_method: str,
         path: str,
-        token: str,
-        params: Optional[Dict],
+        token: str | None,
+        params: dict | None,
     ) -> HTTPClientResponse:
         """
         Perform a request to the NGO Hub API and return a JSON response, or raise HubHTTPError
@@ -93,7 +92,7 @@ class HTTPClient:
 
         conn: HTTPSConnection = http.client.HTTPSConnection(self.api_base_url)
 
-        headers: Dict = {
+        headers: dict = {
             "Content-Type": "application/json",
         }
         if token:
@@ -135,14 +134,14 @@ class HTTPClient:
 
         return HTTPClientResponse(response)
 
-    def api_get(self, path: str, token: str = None) -> HTTPClientResponse:
+    def api_get(self, path: str, token: str | None = None) -> HTTPClientResponse:
         return self._api_request("GET", path, token, params=None)
 
-    def api_post(self, path: str, params: Dict, token: str = None) -> HTTPClientResponse:
+    def api_post(self, path: str, params: dict, token: str | None = None) -> HTTPClientResponse:
         return self._api_request("POST", path, token, params)
 
-    def api_patch(self, path: str, params: Dict, token: str = None) -> HTTPClientResponse:
+    def api_patch(self, path: str, params: dict, token: str | None = None) -> HTTPClientResponse:
         return self._api_request("PATCH", path, token, params)
 
-    def api_delete(self, path: str, token: str = None) -> HTTPClientResponse:
+    def api_delete(self, path: str, token: str | None = None) -> HTTPClientResponse:
         return self._api_request("DELETE", path, token, params=None)

@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Optional, Union
+from typing import Any
 from urllib.parse import urlencode
 
 from ngohub.exceptions import HubHTTPError, MissingUserError
@@ -38,13 +38,13 @@ class NGOHubRaw(BaseHub):
 
         return response.to_str()
 
-    def get_raw_version(self) -> Dict[str, str]:
+    def get_raw_version(self) -> dict[str, str]:
         response: HTTPClientResponse = self.client.api_get("/version/")
 
         return response.to_dict()
 
     def get_raw_file_url(self, path: str) -> str:
-        url_params: Dict[str, str] = {"path": path}
+        url_params: dict[str, str] = {"path": path}
         response: HTTPClientResponse = self.client.api_get(f"/file?{urlencode(url_params)}")
 
         return response.to_str()
@@ -55,13 +55,13 @@ class NGOHubRaw(BaseHub):
         return response.to_dict()
 
     def get_raw_cities_nomenclatures(
-        self, search: str = None, county_id: int = None, city_id: int = None
-    ) -> List[Dict[str, Any]]:
-        mandatory_params: List[Any] = [search, county_id]
+        self, search: str | None = None, county_id: int| None  = None, city_id: int| None  = None
+    ) -> list[dict[str, Any]]:
+        mandatory_params: list[Any] = [search, county_id]
         if all(param is None for param in mandatory_params):
             raise ValueError("Please provide at least one of the following: county_id, search")
 
-        url_params: Dict[str, Any] = {}
+        url_params: dict[str, Any] = {}
         if search:
             url_params["search"] = search
         if county_id:
@@ -71,7 +71,7 @@ class NGOHubRaw(BaseHub):
 
         return self._get_raw_nomenclature(f"cities?{urlencode(url_params)}")
 
-    def get_raw_counties_nomenclatures(self) -> List[Dict[str, Any]]:
+    def get_raw_counties_nomenclatures(self) -> list[dict[str, Any]]:
         return self._get_raw_nomenclature("counties")
 
     def get_raw_domains_nomenclatures(self):
@@ -104,38 +104,38 @@ class NGOHubRaw(BaseHub):
     def get_raw_issuers_nomenclatures(self):
         return self._get_raw_nomenclature("issuers")
 
-    def get_raw_profile(self, user_token: str) -> Dict[str, Any]:
+    def get_raw_profile(self, user_token: str) -> dict[str, Any]:
         response: HTTPClientResponse = self.client.api_get("/profile/", token=user_token)
 
         return response.to_dict()
 
-    def get_raw_organization_profile(self, ngo_token: str) -> Dict[str, Any]:
+    def get_raw_organization_profile(self, ngo_token: str) -> dict[str, Any]:
         response: HTTPClientResponse = self.client.api_get("/organization-profile/", token=ngo_token)
 
         return response.to_dict()
 
-    def get_raw_application_list(self, admin_token: str) -> List[Dict[str, Any]]:
+    def get_raw_application_list(self, admin_token: str) -> list[dict[str, Any]]:
         response: HTTPClientResponse = self.client.api_get("/application/list/", token=admin_token)
 
         return list(response.to_dict())
 
-    def get_raw_user_organization_applications(self, ngo_token: str) -> List[Dict[str, Any]]:
+    def get_raw_user_organization_applications(self, ngo_token: str) -> list[dict[str, Any]]:
         response: HTTPClientResponse = self.client.api_get("/organizations/application/", token=ngo_token)
 
         return list(response.to_dict())
 
-    def get_raw_organization(self, admin_token: str, organization_id: int) -> Dict[str, Any]:
+    def get_raw_organization(self, admin_token: str, organization_id: int) -> dict[str, Any]:
         response: HTTPClientResponse = self.client.api_get(f"/organization/{organization_id}/", token=admin_token)
 
         return response.to_dict()
 
-    def get_raw_organization_applications(self, admin_token, organization_id) -> List[Dict[str, Any]]:
+    def get_raw_organization_applications(self, admin_token, organization_id) -> list[dict[str, Any]]:
         response: HTTPClientResponse = self.client.api_get(
             f"/application/organization/{organization_id}/", token=admin_token
         )
         return list(response.to_dict())
 
-    def get_user_raw(self, admin_token: str, user_id: int) -> Dict[str, Any]:
+    def get_user_raw(self, admin_token: str, user_id: int) -> dict[str, Any]:
         try:
             response: HTTPClientResponse = self.client.api_get(f"/user/{user_id}/", token=admin_token)
         except HubHTTPError as e:
@@ -152,14 +152,14 @@ class NGOHubRaw(BaseHub):
         organization_id: int,
         limit: int = 1000,
         page: int = 1,
-        search: str = None,
-        order_by: str = None,
-        order_direction: str = None,
-        start: str = None,
-        end: str = None,
-        status: str = None,
-        available_apps_ids: List[int] = None,
-    ) -> Dict[str, Any]:
+        search: str | None = None,
+        order_by: str | None = None,
+        order_direction: str | None = None,
+        start: str | None = None,
+        end: str | None = None,
+        status: str | None = None,
+        available_apps_ids: list[int] | None = None,
+    ) -> dict[str, Any]:
         base_url: str = "/user"
         url_params: dict = {"organization_id": organization_id, "limit": limit, "page": page}
 
@@ -202,25 +202,25 @@ class NGOHub(NGOHubRaw):
         return self.get_raw_file_url(path)
 
     def get_profile(self, user_token: str) -> UserProfile:
-        response: Dict[str, Any] = self.get_raw_profile(user_token=user_token)
+        response: dict[str, Any] = self.get_raw_profile(user_token=user_token)
 
         return normalize_user_profile(response)
 
     # Organization related methods
     def get_organization_profile(self, ngo_token: str) -> Organization:
-        response: Dict[str, Any] = self.get_raw_organization_profile(ngo_token)
+        response: dict[str, Any] = self.get_raw_organization_profile(ngo_token)
 
         return normalize_organization_data(response)
 
-    def get_user_organization_applications(self, ngo_token: str) -> List[OrganizationApplication]:
-        response: List[Dict[str, Any]] = self.get_raw_user_organization_applications(ngo_token)
+    def get_user_organization_applications(self, ngo_token: str) -> list[OrganizationApplication]:
+        response: list[dict[str, Any]] = self.get_raw_user_organization_applications(ngo_token)
 
         return normalize_organization_applications(response)
 
     def check_user_organization_has_application(
         self, ngo_token: str, login_link: str
-    ) -> Union[OrganizationApplication, None]:
-        organization_applications: List[OrganizationApplication] = self.get_user_organization_applications(ngo_token)
+    ) -> OrganizationApplication | None:
+        organization_applications: list[OrganizationApplication] = self.get_user_organization_applications(ngo_token)
 
         for app in organization_applications:
             if app.login_link.startswith(login_link) and app.status == "active" and app.ngo_status == "active":
@@ -229,30 +229,30 @@ class NGOHub(NGOHubRaw):
         return None
 
     # Admin related methods
-    def get_application_list(self, admin_token: str) -> List[Application]:
-        response: List[Dict[str, Any]] = self.get_raw_application_list(admin_token)
+    def get_application_list(self, admin_token: str) -> list[Application]:
+        response: list[dict[str, Any]] = self.get_raw_application_list(admin_token)
 
         return normalize_application_list(response)
 
     def get_organization(self, admin_token: str, organization_id: int) -> Organization:
-        response: Dict[str, Any] = self.get_raw_organization(admin_token=admin_token, organization_id=organization_id)
+        response: dict[str, Any] = self.get_raw_organization(admin_token=admin_token, organization_id=organization_id)
 
         return normalize_organization_data(response)
 
-    def get_organization_applications(self, admin_token: str, organization_id: int) -> List[OrganizationApplication]:
+    def get_organization_applications(self, admin_token: str, organization_id: int) -> list[OrganizationApplication]:
         response = self.get_raw_organization_applications(admin_token, organization_id)
 
         return normalize_organization_applications(response)
 
     def get_user(self, admin_token: str, user_id: int) -> User:
-        response: Dict[str, Any] = self.get_user_raw(admin_token, user_id)
+        response: dict[str, Any] = self.get_user_raw(admin_token, user_id)
 
         return normalize_user(response)
 
     def check_organization_has_application(
         self, admin_token: str, organization_id: int, login_link: str
-    ) -> Optional[OrganizationApplication]:
-        organization_applications: List[OrganizationApplication] = self.get_organization_applications(
+    ) -> OrganizationApplication | None:
+        organization_applications: list[OrganizationApplication] = self.get_organization_applications(
             admin_token, organization_id
         )
 
@@ -275,7 +275,7 @@ class NGOHub(NGOHubRaw):
         searched_application_id = response.application.id
 
         while continue_searching:
-            organization_users: Dict[str, Union[Dict, List]] = self.get_raw_users(
+            organization_users: dict[str, dict | list] = self.get_raw_users(
                 admin_token=admin_token, organization_id=organization_id, page=page
             )
 
@@ -290,7 +290,7 @@ class NGOHub(NGOHubRaw):
             for user in response_users:
                 if user["id"] == int(user_id):
                     response.user = user
-                    user_applications: List[Dict[str, Any]] = user["availableAppsIDs"]
+                    user_applications: list[dict[str, Any]] = user["availableAppsIDs"]
 
                     if searched_application_id in user_applications:
                         response.has_access = True
@@ -311,7 +311,7 @@ class NGOHub(NGOHubRaw):
 
         response: CheckOrganizationUserApplication = CheckOrganizationUserApplication()
 
-        organization_application: OrganizationApplication = self.check_organization_has_application(
+        organization_application: OrganizationApplication | None = self.check_organization_has_application(
             admin_token, organization_id, login_link
         )
         if not organization_application:

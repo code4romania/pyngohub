@@ -1,4 +1,4 @@
-from typing import Any, Dict, List
+from typing import Any
 
 from ngohub.models.locations import City, CityBase, County, Region
 from ngohub.models.nomenclatures import Domain
@@ -25,7 +25,7 @@ from ngohub.normalization.processors import (
 )
 
 
-def _normalize_city(city_data: Dict) -> City:
+def _normalize_city(city_data: dict) -> City:
     city_data["county"] = County(**city_data["county"])
 
     normal_data = City(**city_data)
@@ -33,7 +33,7 @@ def _normalize_city(city_data: Dict) -> City:
     return normal_data
 
 
-def _normalize_organization_general(org_general_data: Dict) -> OrganizationGeneral:
+def _normalize_organization_general(org_general_data: dict) -> OrganizationGeneral:
     org_general_data["contact"] = OrganizationContact(**org_general_data["contact"])
 
     org_general_data["city"] = CityBase(**org_general_data["city"])
@@ -49,10 +49,10 @@ def _normalize_organization_general(org_general_data: Dict) -> OrganizationGener
     return org_general
 
 
-def _normalize_organization_activity(org_activity_data: Dict) -> OrganizationActivity:
-    org_domains: List[Domain] = []
-    org_regions: List[Region] = []
-    org_cities: List[City] = []
+def _normalize_organization_activity(org_activity_data: dict) -> OrganizationActivity:
+    org_domains: list[Domain] = []
+    org_regions: list[Region] = []
+    org_cities: list[City] = []
 
     for domain in org_activity_data["domains"]:
         org_domains.append(Domain(**domain))
@@ -70,8 +70,8 @@ def _normalize_organization_activity(org_activity_data: Dict) -> OrganizationAct
     return normal_data
 
 
-def _normalize_organization_legal(org_legal_data: Dict) -> OrganizationLegal:
-    org_directors: List[OrganizationDirector] = []
+def _normalize_organization_legal(org_legal_data: dict) -> OrganizationLegal:
+    org_directors: list[OrganizationDirector] = []
     for director in org_legal_data["directors"]:
         org_directors.append(OrganizationDirector(**director))
 
@@ -83,24 +83,24 @@ def _normalize_organization_legal(org_legal_data: Dict) -> OrganizationLegal:
     return normal_data
 
 
-def _normalize_organization_financial(org_financial_data_set: List[Dict]) -> List[OrganizationFinancial]:
+def _normalize_organization_financial(org_financial_data_set: list[dict]) -> list[OrganizationFinancial]:
     normal_data = [OrganizationFinancial(**org_financial_data) for org_financial_data in org_financial_data_set]
 
     return normal_data
 
 
-def _normalize_organization_report(org_report_data: Dict) -> OrganizationReport:
-    org_reports: List[OrganizationReports] = []
-    org_partners: List[OrganizationPartners] = []
-    org_investors: List[OrganizationInvestors] = []
+def _normalize_organization_report(org_report_data: dict) -> OrganizationReport:
+    org_reports: list[OrganizationReports] = []
+    org_partners: list[OrganizationPartners] = []
+    org_investors: list[OrganizationInvestors] = []
 
-    for report in org_report_data.get("reports"):
+    for report in org_report_data.get("reports", []):
         org_reports.append(OrganizationReports(**report))
 
-    for partner in org_report_data.get("partners"):
+    for partner in org_report_data.get("partners", []):
         org_partners.append(OrganizationPartners(**partner))
 
-    for investor in org_report_data.get("investors"):
+    for investor in org_report_data.get("investors", []):
         org_investors.append(OrganizationInvestors(**investor))
 
     org_report_data["reports"] = org_reports
@@ -112,8 +112,8 @@ def _normalize_organization_report(org_report_data: Dict) -> OrganizationReport:
     return normal_data
 
 
-def normalize_organization_data(org_data: Dict) -> Organization:
-    snake_case: Dict[str, any] = camel_to_snake_case_dictionary(
+def normalize_organization_data(org_data: dict) -> Organization:
+    snake_case: dict[str, Any] = camel_to_snake_case_dictionary(
         org_data,
         overrides={
             "isPublicIntrestOrganization": "is_public_interest_organization",
@@ -138,23 +138,23 @@ def normalize_organization_data(org_data: Dict) -> Organization:
     return normal_data
 
 
-def normalize_organization_applications(org_data_set: List[Dict[str, Any]]) -> List[OrganizationApplication]:
-    snake_case_response: List[Dict[str, any]] = camel_to_snake_case_dictionary_list(
+def normalize_organization_applications(org_data_set: list[dict[str, Any]]) -> list[OrganizationApplication]:
+    snake_case_response: list[dict[str, Any]] = camel_to_snake_case_dictionary_list(
         org_data_set,
         overrides={"ongStatus": "ngo_status"},
         cast_values={"created_on": convert_date},
     )
 
-    normal_data: List[OrganizationApplication] = [
+    normal_data: list[OrganizationApplication] = [
         OrganizationApplication(**org_data) for org_data in snake_case_response
     ]
 
     return normal_data
 
 
-def normalize_application_list(application_data_set: List[Dict]) -> List[Application]:
-    snake_case_response: List[Dict[str, any]] = camel_to_snake_case_dictionary_list(application_data_set)
+def normalize_application_list(application_data_set: list[dict]) -> list[Application]:
+    snake_case_response: list[dict[str, Any]] = camel_to_snake_case_dictionary_list(application_data_set)
 
-    normal_data: List[Application] = [Application(**app_data) for app_data in snake_case_response]
+    normal_data: list[Application] = [Application(**app_data) for app_data in snake_case_response]
 
     return normal_data
