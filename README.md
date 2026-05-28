@@ -27,7 +27,7 @@ else:
 ### Local development
 
 1. Clone the repository
-2. Create a virtual environment using python 3.12 or higher and activate it
+2. Create a virtual environment using python 3.11 or higher and activate it
     ```bash
     python3 -m venv venv && source venv/bin/activate
     ```
