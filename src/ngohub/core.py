@@ -55,7 +55,7 @@ class NGOHubRaw(BaseHub):
         return response.to_dict()
 
     def get_raw_cities_nomenclatures(
-        self, search: str | None = None, county_id: int| None  = None, city_id: int| None  = None
+        self, search: str | None = None, county_id: int | None = None, city_id: int | None = None
     ) -> list[dict[str, Any]]:
         mandatory_params: list[Any] = [search, county_id]
         if all(param is None for param in mandatory_params):
