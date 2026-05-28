@@ -27,7 +27,7 @@ def retry(attempts: int, exceptions: tuple[type[Exception]]):
                 try:
                     return func(*args, **kwargs)
                 except exceptions:
-                    print("Exception thrown when attempting to run %s, attempt " "%d of %d" % (func, attempt, attempts))
+                    print("Exception thrown when attempting to run %s, attempt %d of %d" % (func, attempt, attempts))
                     attempt += 1
             return func(*args, **kwargs)
 
