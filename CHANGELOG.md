@@ -1,41 +1,46 @@
 # Change Log
 
-## [0.1.0](https://github.com/code4romania/pyngohub/releases/tag/0.1.0)(2025-02-12)
+## [0.2.0](https://github.com/code4romania/pyngohub/releases/tag/0.2.0) (2026-05-28)
+
+* Rename the exceptions in order to match the PEP8 recommendations
+* Replace deprecated type hints
+
+## [0.1.0](https://github.com/code4romania/pyngohub/releases/tag/0.1.0) (2025-02-12)
 
 * Bump the minor version to `0.1.0` since the package has passed the production test
 * Bring back compatibility with Python 3.11
 
 
-## [0.0.10](https://github.com/code4romania/pyngohub/releases/tag/0.0.10)(2025-02-03)
+## [0.0.10](https://github.com/code4romania/pyngohub/releases/tag/0.0.10) (2025-02-03)
 
 * Fix the cities in the `organization.activity_data`
 * Fix the organization_city/_county from the `organization.general_data`
 
 
-## [0.0.9](https://github.com/code4romania/pyngohub/releases/tag/0.0.9)(2024-10-03)
+## [0.0.9](https://github.com/code4romania/pyngohub/releases/tag/0.0.9) (2024-10-03)
 
 * Fix the regions of an `organization.activity_data`
 * Add `BaseDataClass` to all the dataclasses
 
 
-## [0.0.8](https://github.com/code4romania/pyngohub/releases/tag/0.0.8)(2024-09-26)
+## [0.0.8](https://github.com/code4romania/pyngohub/releases/tag/0.0.8) (2024-09-26)
 
 * Normalize the API responses for user profile and organization data
 * Implement better error handling for the API
 * Add a retry mechanism for the API
 
 
-## [0.0.7](https://github.com/code4romania/pyngohub/releases/tag/0.0.7)(2024-09-24)
+## [0.0.7](https://github.com/code4romania/pyngohub/releases/tag/0.0.7) (2024-09-24)
 
 * Return dataclass-based objects from the API
 
 
-## [0.0.6](https://github.com/code4romania/pyngohub/releases/tag/0.0.6)(2024-09-17)
+## [0.0.6](https://github.com/code4romania/pyngohub/releases/tag/0.0.6) (2024-09-17)
 
 * Fix the check for a user's access to an application
 
 
-## [0.0.5](https://github.com/code4romania/pyngohub/releases/tag/0.0.5)(2024-09-17)
+## [0.0.5](https://github.com/code4romania/pyngohub/releases/tag/0.0.5) (2024-09-17)
 
 * Add user/organization endpoints for getting information
   * add new organization and user endpoints
@@ -52,12 +57,12 @@
 * Improve the documentation
 
 
-## [0.0.4](https://github.com/code4romania/pyngohub/releases/tag/0.0.4)(2024-08-21)
+## [0.0.4](https://github.com/code4romania/pyngohub/releases/tag/0.0.4) (2024-08-21)
 
 * Add code to work with the public endpoints (i.e., `health`, `version`, `file`, `nomenclatures/*`)
 
 
-## [0.0.3](https://github.com/code4romania/pyngohub/releases/tag/0.0.3)(2024-08-01)
+## [0.0.3](https://github.com/code4romania/pyngohub/releases/tag/0.0.3) (2024-08-01)
 
 * Create `publish` & `release` workflows
 * Add a workflow for running tests & other checks
@@ -65,12 +70,12 @@
 * Add a `tox` configuration
 
 
-## [0.0.2](https://github.com/code4romania/pyngohub/releases/tag/0.0.2)(2024-07-31)
+## [0.0.2](https://github.com/code4romania/pyngohub/releases/tag/0.0.2) (2024-07-31)
 
 * Update the README
 * Update the project classifiers
 
 
-## [0.0.1](https://github.com/code4romania/pyngohub/releases/tag/0.0.1)(2024-07-30)
+## [0.0.1](https://github.com/code4romania/pyngohub/releases/tag/0.0.1) (2024-07-30)
 
 * Initial code for the package.
